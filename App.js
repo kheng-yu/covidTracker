@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import PlaceNavigator from './navigation/PlaceNavigator';
+import PlaceNavigator from './navigator/PlaceNavigator';
 
 
 export default function App() {
