@@ -1,3 +1,11 @@
+# Maven Debug stuff
+backend/target/
+.classpath
+
+# Eclipse setting
+org.eclipse.*
+.project
+
 # Built application files
 *.apk
 *.aar
