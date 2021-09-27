@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Dimensions} from 'react-native';
+import { View, Text, StyleSheet, ScrollView} from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
+import { Searchbar, DataTable } from 'react-native-paper';
 
 
 
@@ -10,7 +11,7 @@ const MapScreen = props => {
 
     const sites = [
         {
-            _id: 1,
+            _id: '1',
             title: 'Mount Hira College', 
             date: '19/09/21',
             time: '8:10am-4:45pm',
@@ -21,7 +22,7 @@ const MapScreen = props => {
             }
         },
         {
-            _id: 2,
+            _id: '2',
             title: 'Kmart Wangaratta', 
             date: '25/09/21',
             time: '10:10am-2:45pm',
@@ -29,6 +30,39 @@ const MapScreen = props => {
             coords: {
                 latitude: -37.81236,
                 longitude: 144.9831
+            }
+        },
+        {
+            _id: '3',
+            title: 'Tyres R Us', 
+            date: '30/07/21',
+            time: '7:10am-3:00pm',
+            tier: 'Tier 2',
+            coords: {
+                latitude: -37.8129,
+                longitude: 144.9
+            }
+        },
+        {
+            _id: '4',
+            title: 'Tyres R Us', 
+            date: '30/07/21',
+            time: '7:10am-3:00pm',
+            tier: 'Tier 2',
+            coords: {
+                latitude: -37.8529,
+                longitude: 144.97
+            }
+        },
+        {
+            _id: '5',
+            title: 'Tyres R Us', 
+            date: '30/07/21',
+            time: '7:10am-3:00pm',
+            tier: 'Tier 2',
+            coords: {
+                latitude: -37.8529,
+                longitude: 144.93
             }
         }
     ]
@@ -40,10 +74,11 @@ const MapScreen = props => {
         longitudeDelta: 0.0421
     };  
 
-    const [currentMarker, setCurrentMarker] = useState({title: '', date: '', time: ''});
+    const [currentMarker, setCurrentMarker] = useState(sites[0]);
     
     const handlePress = (site) => {
-        setCurrentMarker({title: site.title, date: site.date, time: site.time});
+        console.log(currentMarker._id);
+        setCurrentMarker(site);
     }
 
 
@@ -59,9 +94,9 @@ const MapScreen = props => {
     
                     return(
                     <Marker 
-                        key={site._id}
+                        key={site._id + currentMarker._id}
                         coordinate={site.coords}
-                        pinColor={'#096327'}
+                        pinColor={site._id === currentMarker._id ? 'tomato' : 'green'}
                         onPress={() => handlePress(site)}
                     >
                     </Marker>
@@ -69,17 +104,51 @@ const MapScreen = props => {
                     )
                 })}
             </MapView>
-            <View style={styles.details}>
+
+            <View style={{flex: 0.25}}>
+                <Text>Selected Site</Text>
                 <View>
-                <Text>{currentMarker.title}</Text>
-                </View>
-                <View>
-                <Text>{currentMarker.date}</Text>
-                </View>
-                <View>
-                <Text>{currentMarker.time}</Text>
+                    <DataTable>
+                        <DataTable.Header>
+                            <DataTable.Title>Site</DataTable.Title>
+                            <DataTable.Title>Exposure Period</DataTable.Title>
+                            <DataTable.Title>Tier</DataTable.Title>
+                        </DataTable.Header>
+
+                            <DataTable.Row key={currentMarker._id}>
+                                <DataTable.Cell >{currentMarker.title}</DataTable.Cell>
+                                <DataTable.Cell>{currentMarker.date}</DataTable.Cell>
+                                <DataTable.Cell>{currentMarker.tier}</DataTable.Cell>
+                            </DataTable.Row>
+
+                    </DataTable>
                 </View>
             </View>
+
+            <View style={{flex: 0.4}}>
+                <Text>All Sites</Text>
+                <ScrollView>
+                    <DataTable>
+
+                        <DataTable.Header>
+                            <DataTable.Title>Site</DataTable.Title>
+                            <DataTable.Title>Exposure Period</DataTable.Title>
+                            <DataTable.Title>Tier</DataTable.Title>
+                        </DataTable.Header>
+
+                        {sites.map((site) => {
+                            return(
+                                <DataTable.Row key={site._id} onPress={() => handlePress(site)}>
+                                    <DataTable.Cell >{site.title}</DataTable.Cell>
+                                    <DataTable.Cell>{site.date}</DataTable.Cell>
+                                    <DataTable.Cell>{site.tier}</DataTable.Cell>
+                                </DataTable.Row>
+                            );
+                        })}
+                    </DataTable>
+                </ScrollView>
+            </View>
+
         </View>
     );
 
@@ -87,14 +156,10 @@ const MapScreen = props => {
 
 const styles = StyleSheet.create({
    map: {
-       flex: 0.5,
+       flex: 0.4,
 
    },
-   details: {
-    justifyContent: 'space-around',
-    flex: 0.5, 
-    flexDirection: 'row'
-   }
+
 });
 
 export default MapScreen;
