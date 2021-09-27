@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, Dimensions} from 'react-native';
 import React, { useState } from 'react';
 import { DataTable } from 'react-native-paper';
+import MapView, { Marker } from 'react-native-maps';
  
 const NotificationScreen = () => {
 
@@ -31,7 +32,32 @@ const NotificationScreen = () => {
         }
     ]
 
+    const [selectedNotif, setSelectedNotif] = useState(notifications[0]);
+
+    const handlePress = (notif) => {
+        setSelectedNotif(notif);
+    }
+
+    const mapRegion = {
+        latitude: -37.8136,
+        longitude: 144.9631,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421
+    };  
+
     return(
+        <View style={{flex: 1, flexDirection: 'column' }}>
+            <MapView 
+                style={styles.map}
+                region={mapRegion}
+                provider="google"
+            > 
+                <Marker 
+                key={selectedNotif._id}
+                coordinate={selectedNotif.coords}
+                pinColor={'#096327'}
+                />
+            </MapView>
         <View style={styles.container}>
           <DataTable>
 
@@ -44,7 +70,7 @@ const NotificationScreen = () => {
 
             {notifications.map((notif) => {
                 return(
-                    <DataTable.Row key={notif._id}>
+                    <DataTable.Row key={notif._id} onPress={() => handlePress(notif)}>
                         <DataTable.Cell>{notif.type}</DataTable.Cell>
                         <DataTable.Cell >{notif.title}</DataTable.Cell>
                         <DataTable.Cell>{notif.date}</DataTable.Cell>
@@ -54,6 +80,7 @@ const NotificationScreen = () => {
             })}
           </DataTable>
         </View>
+        </View>
       );
 }
 
@@ -62,6 +89,10 @@ const styles = StyleSheet.create({
       paddingTop: 100,
       paddingHorizontal: 30,
 
+    },
+    map: {
+        flex: 0.5,
+ 
     },
   });
 
