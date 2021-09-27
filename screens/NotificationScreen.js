@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Dimensions} from 'react-native';
+import { View, Text, StyleSheet, ScrollView} from 'react-native';
 import React, { useState } from 'react';
 import { DataTable } from 'react-native-paper';
 import MapView, { Marker } from 'react-native-maps';
@@ -58,7 +58,8 @@ const NotificationScreen = () => {
                 pinColor={'#096327'}
                 />
             </MapView>
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
+          <Text>Recent Notifications</Text>
           <DataTable>
 
             <DataTable.Header>
@@ -79,7 +80,7 @@ const NotificationScreen = () => {
                 );
             })}
           </DataTable>
-        </View>
+        </ScrollView>
         </View>
       );
 }
@@ -88,10 +89,11 @@ const styles = StyleSheet.create({
     container: {
       paddingTop: 100,
       paddingHorizontal: 30,
+      flex: 0.4
 
     },
     map: {
-        flex: 0.5,
+        flex: 0.6,
  
     },
   });
