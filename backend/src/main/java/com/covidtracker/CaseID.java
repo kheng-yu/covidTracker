@@ -7,7 +7,7 @@ caseData holds all case informations. Will be the "value" of caseDict.
 import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvRecurse;
 
-public class CaseDict {
+public class CaseID {
     @CsvBindByName(column = "dhid")
     private String caseID;
 
@@ -15,7 +15,7 @@ public class CaseDict {
     private CaseData caseData;
 
     // Constructor
-    public CaseDict() {}
+    public CaseID() {}
 
     // Getters
     public String getCaseID() { return caseID; }

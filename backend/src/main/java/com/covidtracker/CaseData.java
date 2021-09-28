@@ -8,6 +8,7 @@ import java.time.LocalDate; // https://docs.oracle.com/javase/8/docs/api/java/ti
 import java.time.LocalTime; // https://docs.oracle.com/javase/8/docs/api/java/time/LocalDate.html
 
 public class CaseData {
+    // Variables 
     @CsvBindByName(column = "Site_title")
     private String name;
 
@@ -34,11 +35,9 @@ public class CaseData {
     @CsvDate("d/MM/yyyy")
     private LocalDate addedDate;
 
+    private int tier;
     @CsvBindByName(column = "Advice_title")
     private String tierAdvice;
-
-    // @CsvBindByName(column = "Advice_title")
-    // private String tier;
 
     @CsvBindByName(column = "Advice_instruction")
     private String tierInstruction;
@@ -57,66 +56,41 @@ public class CaseData {
     @CsvBindByName(column = "Longitude")
     private double longitude;
 
-    // // Variables
-    // private String name;
-    // private String address;
-    // private LocalDate exposureDate;
-    // private LocalTime exposureTimeStart;
-    // private LocalTime exposureTimeEnd;
-    // private int tier;
-    // private String notes;
-    // private LocalDate    dateAdded;
-
-    // // Data Index
-    // private static final int SUBURB = 1;
-    // private static final int NAME = 2;
-    // private static final int ADDRESS = 3;
-    // private static final int STATE = 4;
-    // private static final int POSTCODE = 5;
-    // private static final int EXDATE = 6;
-    // private static final int NOTES1 = 9;
-    // private static final int NOTES2 = 10;
-    // private static final int NOTES3 = 11;
-    // private static final int EXSTART = 16;
-    // private static final int EXEND = 17;
-    // private static final int TIER = 12;
-    // private static final int DATEADDED = 10;
-
-    // // Constructor
-    // public CaseData() {
-    //     System.out.println("Empty Case Data Initialized");
-    // }
-    // public CaseData(String[] data) {
-    //     this.name = data[NAME];
-    //     this.address = data[ADDRESS] + data[SUBURB] + data[STATE] + data[POSTCODE];
-    //     System.out.println(EXDATE + ", " + data[EXDATE]);
-    //     System.out.println(EXSTART + ", " + data[EXSTART]);
-    //     System.out.println(EXEND + ", " + data[EXEND]);
-    //     System.out.println(DATEADDED + ", " + data[DATEADDED]);
-    //     // this.exposureDate = exposureDate.parse(data[EXDATE).replace("/","-"));
-    //     // this.exposureTimeStart = exposureTimeStart.parse(data[EXSTART));
-    //     // this.exposureTimeEnd = exposureTimeEnd.parse(data[EXEND));
-    //     // this.tier = Integer.parseInt(data[TIER).replaceAll("[^0-9]", ""));
-    //     this.notes = data[NOTES1] + data[NOTES2] + data[NOTES3];
-    //     // this.dateAdded = dateAdded.parse(data[DATEADDED));s
-    // }
     // Constructor
     public CaseData() {}
+    
+    // Getters
+    public String getAddress() { return this.name + ", " + this.address + " " + this.suburb + " " + this.state + " " + this.postcode; }
+    public double getLat() { return this.latitude; }
+    public double getLong() { return this.longitude; }
+    public double getTier() {
+        if (this.tier == 0) {
+            setTier();
+        }
+        return this.tier;
+    }
+    public String getNotes() { return this.notes; }
+    public String getInstruction() { return this.tierInstruction; }
+    public LocalDate getExposeDate() { return this.exposureDate; }
+    public LocalTime getExposeTimeStart() { return this.exposureTimeStart; }
+    public LocalTime getExposeTimeEnd() { return this.exposureTimeEnd; }
+    public LocalDate getAddedDate() { return this.addedDate; }
 
-    public CaseData(String name, String address, LocalDate exposureDate, LocalTime exposureTimeStart,
-            LocalTime exposureTimeEnd, int tier, String notes, LocalDate dateAdded) {
-        this.name = name;
-        this.address = address;
-        this.exposureDate = exposureDate;
-        this.exposureTimeStart = exposureTimeStart;
-        this.exposureTimeEnd = exposureTimeEnd;
-        // this.tier = tier;
-        this.notes = notes;
-        // this.dateAdded = dateAdded;
+    // Setters
+    private void setTier() {
+        for (int i = 0; i < this.tierAdvice.length(); i++) {
+            char c = this.tierAdvice.charAt(i);
+            if (Character.isDigit(c)) {
+                this.tier = Character.getNumericValue(c);
+            }
+        }
     }
 
     @Override
     public String toString() {
-        return name + ", " + address + " " + suburb + " " + state + " " + postcode + ", " + tierAdvice + "\n";
+        if (this.tier == 0) {
+            setTier();
+        }   
+        return "Tier " + tier + " @ " + name + ", " + address + " " + suburb + " " + state + " " + postcode + ". GPS: " + latitude + ", " + longitude + ". " + "Advice: " + tierAdvice + ". " + tierInstruction + "\n";
     }
 }
