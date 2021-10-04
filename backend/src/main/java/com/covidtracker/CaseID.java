@@ -1,8 +1,8 @@
-package com.covidtracker;
-
 /*
-caseData holds all case informations. Will be the "value" of caseDict.
+caseID holds the unique case ID for each case. Will be the "key" of caseDict.
 */
+
+package com.covidtracker;
 
 import com.opencsv.bean.CsvBindByName;
 import com.opencsv.bean.CsvRecurse;

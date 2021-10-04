@@ -1,3 +1,7 @@
+/*
+caseData holds all case informations. Will be the "value" of caseDict.
+*/
+
 package com.covidtracker;
 
 import com.opencsv.bean.CsvBindByName;
@@ -56,13 +60,15 @@ public class CaseData {
     @CsvBindByName(column = "Longitude")
     private double longitude;
 
+    private double distance;
+
     // Constructor
     public CaseData() {}
     
     // Getters
     public String getAddress() { return this.name + ", " + this.address + " " + this.suburb + " " + this.state + " " + this.postcode; }
     public double getLat() { return this.latitude; }
-    public double getLong() { return this.longitude; }
+    public double getLon() { return this.longitude; }
     public double getTier() {
         if (this.tier == 0) {
             setTier();
@@ -75,7 +81,8 @@ public class CaseData {
     public LocalTime getExposeTimeStart() { return this.exposureTimeStart; }
     public LocalTime getExposeTimeEnd() { return this.exposureTimeEnd; }
     public LocalDate getAddedDate() { return this.addedDate; }
-
+    public double getDistance() { return this.distance; }
+    
     // Setters
     private void setTier() {
         for (int i = 0; i < this.tierAdvice.length(); i++) {
@@ -85,12 +92,19 @@ public class CaseData {
             }
         }
     }
+    public void setDistance(double distance){
+        this.distance = distance;
+    }
 
     @Override
     public String toString() {
         if (this.tier == 0) {
             setTier();
         }   
-        return "Tier " + tier + " @ " + name + ", " + address + " " + suburb + " " + state + " " + postcode + ". GPS: " + latitude + ", " + longitude + ". " + "Advice: " + tierAdvice + ". " + tierInstruction + "\n";
+        return "Tier " + tier + " @ "
+                + name + ", " + address + " " + suburb + " " + state + " " + postcode
+                + ". GPS: " + latitude + ", " + longitude + ". "
+                + "\nAdvice: " + tierAdvice + ". " + tierInstruction 
+                + "\nDistance: " + distance + "km\n";
     }
 }

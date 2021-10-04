@@ -7,10 +7,6 @@ import com.opencsv.exceptions.CsvException;
 import java.io.*;
 import java.util.*;
 
-/**
- * Hello world!
- *
- */
 public class App 
 {
     public static void main( String[] args ) throws IllegalStateException, FileNotFoundException
@@ -30,7 +26,14 @@ public class App
             caseDict.put(caseID.getCaseID(), caseID.getCaseData());
         }
 
-        // // Test Dict
-        // System.out.println(caseDict.get("E8X5"));
+        // Test Dict
+        System.out.println(caseDict.get("E8X5"));
+
+        // Make MapInfo
+        MapInfo mapInfo = new MapInfo(caseDict);
+
+        // Test Distance
+        System.out.println(caseDict.get("E8X5"));
+        System.out.println("Direct straight line distance to E8X5 from Unimelb is about 36km");
     }
 }
