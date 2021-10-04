@@ -14,24 +14,28 @@ public class MapInfo {
 
     // Variables
     // Let 0 be lat, 1 be lon
-    private Map<String, CaseData> caseDict;
     private Pair<Double, Double> userLoc;
     private Pair<Double, Double> destinationLoc;
-
+    private static List<CaseData> closestCase;
     // Constructor
     public MapInfo(Map<String, CaseData> caseDict)
     {
         // Initialize userLocation
         updateUserLoc();
 
-        for (String caseID : caseDict.keySet()) 
-        {
-            caseDict.get(caseID)
-            .setDistance(calcDist(this.userLoc, Pair.with(
-                caseDict.get(caseID).getLat(), caseDict.get(caseID).getLon()
-            )));
+        // Set Distance value into caseDict based on userLoc
+        for (String caseID : caseDict.keySet()) {
+            caseDict.get(caseID).setDistance(
+                    calcDist(this.userLoc, Pair.with(caseDict.get(caseID).getLat(), caseDict.get(caseID).getLon())));
         }
+
+        // Initialize closestCase
+        MapInfo.closestCase = new ArrayList<>(caseDict.values());
+        Collections.sort(MapInfo.closestCase);
     }
+    
+    // Getters
+    public static List<CaseData> getClosestCase() { return closestCase; }
 
     // Setters
     public void setDestination(double lat, double lon) {

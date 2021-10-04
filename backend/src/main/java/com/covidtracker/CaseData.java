@@ -11,7 +11,7 @@ import java.util.*;
 import java.time.LocalDate; // https://docs.oracle.com/javase/8/docs/api/java/time/LocalDate.html
 import java.time.LocalTime; // https://docs.oracle.com/javase/8/docs/api/java/time/LocalDate.html
 
-public class CaseData {
+public class CaseData implements Comparable<CaseData> {
     // Variables 
     @CsvBindByName(column = "Site_title")
     private String name;
@@ -62,6 +62,8 @@ public class CaseData {
 
     private double distance;
 
+    private String caseID;
+
     // Constructor
     public CaseData() {}
     
@@ -96,15 +98,32 @@ public class CaseData {
         this.distance = distance;
     }
 
+    public void setCaseID(String caseID) {
+        this.caseID = caseID;
+    }
+
     @Override
     public String toString() {
         if (this.tier == 0) {
             setTier();
         }   
-        return "Tier " + tier + " @ "
+        return caseID + ", Tier " + tier + " @ "
                 + name + ", " + address + " " + suburb + " " + state + " " + postcode
                 + ". GPS: " + latitude + ", " + longitude + ". "
                 + "\nAdvice: " + tierAdvice + ". " + tierInstruction 
-                + "\nDistance: " + distance + "km\n";
+                + "\nDistance: " + distance + " km\n";
+    }
+
+    @Override
+    public int compareTo(CaseData otherCase) {
+        if (this.distance < otherCase.getDistance()) {
+            return -1;
+        }
+        else if (this.distance > otherCase.getDistance()) {
+            return 1;
+        }
+        else{
+            return 0;
+        }
     }
 }
