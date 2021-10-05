@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView} from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Button} from 'react-native';
 import React, { useState } from 'react';
 import { DataTable } from 'react-native-paper';
 import MapView, { Marker } from 'react-native-maps';
@@ -45,8 +45,21 @@ const NotificationScreen = () => {
         longitudeDelta: 0.0421
     };  
 
+    const triggerNotification = () => {
+        Notifications.scheduleNotificationAsync({
+          content: {
+            title: "Exposure Site Nearby",
+            body: "Tap for more details"
+          },
+          trigger: {
+            seconds: 5
+          }
+        });
+      }
+
     return(
         <View style={{flex: 1, flexDirection: 'column' }}>
+            <Button title="Send Notification" onPress={triggerNotification} />
             <MapView 
                 style={styles.map}
                 region={mapRegion}
