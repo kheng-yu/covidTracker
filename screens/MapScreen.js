@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView} from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Button} from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { Searchbar, DataTable } from 'react-native-paper';
-
+import * as Notifications from 'expo-notifications';
 
 
 
@@ -81,10 +81,22 @@ const MapScreen = props => {
         setCurrentMarker(site);
     }
 
+    const triggerNotification = () => {
+        Notifications.scheduleNotificationAsync({
+          content: {
+            title: "Exposure Site Nearby",
+            body: "Tap for more details"
+          },
+          trigger: {
+            seconds: 5
+          }
+        });
+      }
+
 
     return (
         <View style={{flex: 1, flexDirection: 'column' }}>
-
+            <Button title="Send Notification" onPress={triggerNotification} />
             <MapView 
                 style={styles.map}
                 region={mapRegion}
