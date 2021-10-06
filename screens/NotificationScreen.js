@@ -1,8 +1,24 @@
-import { View, Text, StyleSheet, ScrollView, Button} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Button} from 'react-native';
 import React, { useState } from 'react';
 import { DataTable } from 'react-native-paper';
 import MapView, { Marker } from 'react-native-maps';
- 
+import * as TaskManager from 'expo-task-manager';
+import * as Location from 'expo-location';
+
+const LOCATION_TASK_NAME = 'background-location-task';
+
+TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
+  if (error) {
+    console.log(error.message);
+    return;
+  }
+  if (data) {
+    const { locations } = data;
+    console.log('Received new locations', new Date(locations[0].timestamp));
+    console.log("Longitude, latitude = " + locations[0].coords.latitude + ", " + locations[0].coords.longitude);
+  }
+});
+
 const NotificationScreen = () => {
 
     const notifications = [
@@ -57,9 +73,26 @@ const NotificationScreen = () => {
         });
       }
 
+      const requestPermissions = async () => {
+        await Location.requestForegroundPermissionsAsync();
+        const { status } = await Location.requestBackgroundPermissionsAsync();
+        if (status === 'granted') {
+          await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+            accuracy: Location.Accuracy.High,
+            timeInterval: 1000,
+            distanceInterval: 0,
+          });
+        }
+      };
+
     return(
         <View style={{flex: 1, flexDirection: 'column' }}>
             <Button title="Send Notification" onPress={triggerNotification} />
+
+              <TouchableOpacity onPress={requestPermissions}>
+                <Text>Enable background location</Text>
+              </TouchableOpacity>
+
             <MapView 
                 style={styles.map}
                 region={mapRegion}
