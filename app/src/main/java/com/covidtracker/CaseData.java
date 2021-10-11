@@ -17,57 +17,23 @@ import java.time.format.DateTimeFormatter;
 
 public class CaseData implements Comparable<CaseData> {
     // Variables
-//    @CsvBindByName(column = "Site_title")
     private String siteTitle;
-
-//    @CsvBindByName(column = "Site_streetaddress")
     private String siteStreetaddress;
-
-//    @CsvBindByName(column = "Suburb")
     private String suburb;
-
-//    @CsvBindByName(column = "Site_postcode")
     private int sitePostcode;
-
-//    @CsvBindByName(column = "Site_state")
     private String siteState;
-
-//    @CsvBindByName(column = "Exposure_date")
-//    @CsvDate("d/MM/yyyy")
     private String exposureDate;
-
-//    @CsvBindByName(column = "Notes")
     private String notes;
-
-//    @CsvBindByName(column = "Added_date")
-//    @CsvDate("d/MM/yyyy")
     private String addedDate;
-
     private int tier;
-//    @CsvBindByName(column = "Advice_title")
     private String adviceTitle;
-
-//    @CsvBindByName(column = "Advice_instruction")
     private String adviceInstruction;
-
-//    @CsvBindByName(column = "Exposure_time_start_24")
-//    @CsvDate("H:mm:ss")
     private String exposureTimeStart24;
-
-//    @CsvBindByName(column = "Exposure_time_end_24")
-//    @CsvDate("H:mm:ss")
     private String exposureTimeEnd24;
-
-//    @CsvBindByName(column = "Latitude")
     private double latitude;
-
-//    @CsvBindByName(column = "Longitude")
     private double longitude;
-
     private double distance;
-
     private String dhid;
-
     private String addedTime;
     private int id;
     private String exposureTime;
