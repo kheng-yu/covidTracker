@@ -45,6 +45,13 @@ public class MapInfo {
 //        return "MapInfo";
 //    }
 //    @ReactMethod
+    // Get caseDict
+    public Map<String, CaseData> getCaseDict() {
+        Log.d(TAG, "Returning caseDict of size " + caseDict.size());
+        return this.caseDict;
+    }
+
+    // Get sites sorted in an array according to distance to most recent user location
     public List<CaseData> getCloseSites() {
         Log.d(TAG, "Returning sorted List<CaseData> by distance.");
 
@@ -54,7 +61,7 @@ public class MapInfo {
         // Calculate new Distance value based on new userLoc
         for (String caseID : this.caseDict.keySet()) {
             this.caseDict.get(caseID).setDistance(
-                    calcDist(this.userLoc, Pair.with(
+                    calcDist(this.userLoc.get(userLoc.size()-1), Pair.with(
                             this.caseDict.get(caseID).getLat(),
                             this.caseDict.get(caseID).getLon())));
         }
@@ -66,20 +73,43 @@ public class MapInfo {
         return this.closestCase;
     }
 
-    public Map<String, CaseData> getCaseDict() {
-        Log.d(TAG, "Returning caseDict of size " + caseDict.size());
-        return this.caseDict;
+    // Get sites that have less than a certain distance to user's entire location history
+    public List<CaseData> getInfect() {
+        Log.d(TAG, "Returning List<CaseData> if user location history is within " + SENSITIVITY + "m.");
+        List<CaseData> infectList = new ArrayList<>(); // to record case that potentially infect
+
+        // Update location
+        updateUserLoc();
+
+        // For every case
+        for (String caseID : this.caseDict.keySet()) {
+            Pair<Double, Double> caseLoc = Pair.with(
+                    this.caseDict.get(caseID).getLat(), this.caseDict.get(caseID).getLon());
+            // Calculate Distance from all user location in history
+            for (Pair<Double, Double> loc : this.userLoc) {
+                double dist = calcDist(loc, caseLoc);
+                // Within sensitivity, record this case and break loop and look at next case
+                if (dist < SENSITIVITY/1000) {
+                    infectList.add(caseDict.get(caseID));
+                    break;
+                }
+            }
+        }
+
+        // Update and return infectList
+        return infectList;
     }
 
     // Constants
     private final String TAG = "MapInfo";
     private final int R = 6371; // Mean radius of Earth in km from https://nssdc.gsfc.nasa.gov/planetary/factsheet/earthfact.html
+    private final double SENSITIVITY = 10.0; // How sensitive before determining user is at this location, now set to 10m
     private CollectionReference DB = FirebaseFirestore.getInstance().collection("Exposure Sites");
 
     // Variables
     private Map<String, CaseData> caseDict;
     // Let 0 be lat, 1 be lon
-    private Pair<Double, Double> userLoc;
+    private List<Pair<Double, Double>> userLoc;
     private Pair<Double, Double> destinationLoc;
     private List<CaseData> closestCase;
 
@@ -87,7 +117,6 @@ public class MapInfo {
         // Initialize caseDict
         this.caseDict = new HashMap<String, CaseData>();
         updateCaseDict();
-
     }
 
     // Setters
@@ -95,8 +124,14 @@ public class MapInfo {
         this.destinationLoc = Pair.with(lat, lon);
     }
     public void updateUserLoc() {
-        // ToDo, use Unimelb for now
-        this.userLoc = Pair.with(-37.79812546095852, 144.96096326974035);
+        // ToDo, use Unimelb, Universal and Queen Victoria Market for now
+        List<Pair<Double, Double>> test = new ArrayList<>();
+        test.add(Pair.with(-37.80332901429881, 144.96609014504605)); // Universal Restaurant
+        test.add(Pair.with(-37.80745263094032, 144.95679572725638)); // QVMarket
+        test.add(Pair.with(-37.79870935774574, 144.95324099103144)); // Nord Appartment
+        test.add(Pair.with(-37.79812546095852, 144.96096326974035)); // Unimelb
+
+        this.userLoc = test;
     }
 
     // Function
@@ -143,7 +178,7 @@ public class MapInfo {
 
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-        return R * c;
+        return R * c; // in km
     }
 
 
