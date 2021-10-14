@@ -33,7 +33,7 @@ public class SiteService {
             return null;
         }
     }
-    public List<ExposureSite> getSiteDetailsk() throws ExecutionException, InterruptedException {
+    public List<ExposureSite> getSiteDetails() throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         Iterable<DocumentReference> documentReferences = dbFirestore.collection(COLLECTION_NAME).listDocuments();
         Iterator<DocumentReference> iterator = documentReferences.iterator();

@@ -29,7 +29,7 @@ public class FirebaseInitialize {
 //            FileInputStream serviceAccount = null;
         try {
 //            ServletContext servletContext = getServletContext();
-            FileInputStream serviceAccount = new FileInputStream("demo/AccountKey.json");
+            FileInputStream serviceAccount = new FileInputStream("AccountKey.json");
 //            System.out.println(serviceAccount);
 //            InputStream serviceAccount= this.getClass().getClassLoader().getResourceAsStream("./serviceAccountKey.json");
 //            serviceAccount = new FileInputStream("./serviceAccountKey.json");
