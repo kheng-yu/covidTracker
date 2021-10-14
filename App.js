@@ -26,11 +26,26 @@ var newNotifications = [
   },
 ];
 
+var newSites = [
+  {
+      _id: '1',
+      title: 'Mount Hira College', 
+      date: '19/09/21',
+      time: '8:10am-4:45pm',
+      tier: 'Tier 1',
+      coords: {
+          latitude: -37.8136,
+          longitude: 144.9631
+      }
+  },
+]
+
 const BACKGROUND_FETCH_NOTIFICATION = 'background-fetch-notification';
+const BACKGROUND_FETCH_SITES = 'background-fetch-sites';
 
 
 
-async function registerBackgroundFetchAsync() {
+async function registerBackgroundFetchAsyncNotifications() {
   return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_NOTIFICATION, {
     minimumInterval: 1, // 15 minutes
     stopOnTerminate: false, // android only,
@@ -38,6 +53,15 @@ async function registerBackgroundFetchAsync() {
   });
 }
 
+async function registerBackgroundFetchAsyncSites() {
+  return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_SITES, {
+    minimumInterval: 1, // 15 minutes
+    stopOnTerminate: false, // android only,
+    startOnBoot: true, // android only
+  });
+}
+
+//For the actual notification that comes up at the top of the screen
 Notifications.setNotificationHandler({
   handleNotification: async () => {
     return {
@@ -61,6 +85,7 @@ const Tab = createBottomTabNavigator();
 export default function App() {
 
   const [notifications, setNotifications] = useState(newNotifications);
+  const [sites, setSites] = useState(newSites);
 
   TaskManager.defineTask(BACKGROUND_FETCH_NOTIFICATION, async () => {
     //API call resp = axios.get(BASE_URL + 'getNotifications', username);
@@ -107,6 +132,70 @@ export default function App() {
     return BackgroundFetch.Result.NewData;
   });
 
+  TaskManager.defineTask(BACKGROUND_FETCH_SITES, async () => {
+    //API call resp = axios.get(BASE_URL + 'getSites');
+    setSites([
+      {
+          _id: '1',
+          title: 'test', 
+          date: '19/09/21',
+          time: '8:10am-4:45pm',
+          tier: 'Tier 1',
+          coords: {
+              latitude: -37.8136,
+              longitude: 144.9631
+          }
+      },
+      {
+          _id: '2',
+          title: 'Kmart Wangaratta', 
+          date: '25/09/21',
+          time: '10:10am-2:45pm',
+          tier: 'Tier 2',
+          coords: {
+              latitude: -37.81236,
+              longitude: 144.9831
+          }
+      },
+      {
+          _id: '3',
+          title: 'Tyres R Us', 
+          date: '30/07/21',
+          time: '7:10am-3:00pm',
+          tier: 'Tier 2',
+          coords: {
+              latitude: -37.8129,
+              longitude: 144.9
+          }
+      },
+      {
+          _id: '4',
+          title: 'Tyres R Us', 
+          date: '30/07/21',
+          time: '7:10am-3:00pm',
+          tier: 'Tier 2',
+          coords: {
+              latitude: -37.8529,
+              longitude: 144.97
+          }
+      },
+      {
+          _id: '5',
+          title: 'Tyres R Us', 
+          date: '30/07/21',
+          time: '7:10am-3:00pm',
+          tier: 'Tier 2',
+          coords: {
+              latitude: -37.8529,
+              longitude: 144.93
+          }
+      }
+  ]);
+    console.log('sites updated');
+    // Be sure to return the successful result type!
+    return BackgroundFetch.Result.NewData;
+  });
+
   useEffect(() => {
     //When app is closed
     const backgroundSubscription = Notifications.addNotificationResponseReceivedListener(response => {
@@ -124,7 +213,8 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    registerBackgroundFetchAsync();
+    registerBackgroundFetchAsyncNotifications();
+    registerBackgroundFetchAsyncSites();
     console.log('task registered');
   }, [])
 
@@ -135,7 +225,7 @@ export default function App() {
         options={{tabBarIcon: ({ color, size }) => (
           <MaterialCommunityIcons name="bell" color={color} size={size} />
         ),}} />
-        <Tab.Screen name="Map" component={MapScreen} 
+        <Tab.Screen name="Map" children={() => <MapScreen sites={sites}/>}
         options={{tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="map-marker" color={color} size={size} />
           ),}} />

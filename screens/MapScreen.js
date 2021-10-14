@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Button} from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { Searchbar, DataTable } from 'react-native-paper';
@@ -7,65 +7,7 @@ import { Searchbar, DataTable } from 'react-native-paper';
 
 
 
-const MapScreen = props => {
-
-    const sites = [
-        {
-            _id: '1',
-            title: 'Mount Hira College', 
-            date: '19/09/21',
-            time: '8:10am-4:45pm',
-            tier: 'Tier 1',
-            coords: {
-                latitude: -37.8136,
-                longitude: 144.9631
-            }
-        },
-        {
-            _id: '2',
-            title: 'Kmart Wangaratta', 
-            date: '25/09/21',
-            time: '10:10am-2:45pm',
-            tier: 'Tier 2',
-            coords: {
-                latitude: -37.81236,
-                longitude: 144.9831
-            }
-        },
-        {
-            _id: '3',
-            title: 'Tyres R Us', 
-            date: '30/07/21',
-            time: '7:10am-3:00pm',
-            tier: 'Tier 2',
-            coords: {
-                latitude: -37.8129,
-                longitude: 144.9
-            }
-        },
-        {
-            _id: '4',
-            title: 'Tyres R Us', 
-            date: '30/07/21',
-            time: '7:10am-3:00pm',
-            tier: 'Tier 2',
-            coords: {
-                latitude: -37.8529,
-                longitude: 144.97
-            }
-        },
-        {
-            _id: '5',
-            title: 'Tyres R Us', 
-            date: '30/07/21',
-            time: '7:10am-3:00pm',
-            tier: 'Tier 2',
-            coords: {
-                latitude: -37.8529,
-                longitude: 144.93
-            }
-        }
-    ]
+const MapScreen = ({ sites }) => {
     
     const mapRegion = {
         latitude: -37.8136,
