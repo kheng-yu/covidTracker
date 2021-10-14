@@ -7,3 +7,4 @@ Team 02-2 Assignment for COMP90018
 2. click run 
 
 3. insert localhost:8080/api/ to call api
+  for example : http://localhost:8080/api/sites
