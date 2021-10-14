@@ -4,42 +4,12 @@ import { DataTable } from 'react-native-paper';
 import MapView, { Marker } from 'react-native-maps';
 import * as Notifications from 'expo-notifications';
 
-const defaultNotifications = [
-  {
-      _id: 1,
-      title: 'Mount Hira College', 
-      date: '19/09/21',
-      time: '8:10am-4:45pm',
-      tier: 'Tier 1',
-      type: 'Nearby',
-      coords: {
-          latitude: -37.8136,
-          longitude: 144.9631
-      }
-  },
-  {
-      _id: 2,
-      title: 'Kmart Wangaratta', 
-      date: '25/09/21',
-      time: '10:10am-2:45pm',
-      tier: 'Tier 2',
-      type: 'Match',
-      coords: {
-          latitude: -37.81236,
-          longitude: 144.9831
-      }
-  }
-] 
-
-
-
-
  
-const NotificationScreen = () => {
+const NotificationScreen = ({notifs}) => {
 
-    const [notifications, setNotifications] = useState(defaultNotifications)
+    const [notifications, setNotifications] = useState(notifs)
 
-    const [selectedNotif, setSelectedNotif] = useState(notifications[0]);
+    const [selectedNotif, setSelectedNotif] = useState(notifs[0]);
 
     const handlePress = (notif) => {
         setSelectedNotif(notif);
@@ -59,60 +29,17 @@ const NotificationScreen = () => {
             body: "Tap for more details"
           },
           trigger: {
-            seconds: 5
+            seconds: 1
           }
         });
       }
 
-    const getAllNotifications = () => {
-      //API call resp = axios.get(BASE_URL + 'getNotifications', username);
-      const newNotifications = [
-        {
-            _id: 1,
-            title: 'Mount Hira College', 
-            date: '19/09/21',
-            time: '8:10am-4:45pm',
-            tier: 'Tier 1',
-            type: 'Nearby',
-            coords: {
-                latitude: -37.8136,
-                longitude: 144.9631
-            }
-        },
-        {
-            _id: 2,
-            title: 'Kmart Wangaratta', 
-            date: '25/09/21',
-            time: '10:10am-2:45pm',
-            tier: 'Tier 2',
-            type: 'Match',
-            coords: {
-                latitude: -37.81236,
-                longitude: 144.9831
-            }
-        },
-        {
-          _id: 3,
-          title: 'Kmart Wangaratta', 
-          date: '25/09/21',
-          time: '10:10am-2:45pm',
-          tier: 'Tier 2',
-          type: 'Match',
-          coords: {
-              latitude: -37.81236,
-              longitude: 144.9831
-          }
-      },
-      ];
-      if (newNotifications.length > notifications.length) {
-        triggerNotification();
-        setNotifications((newNotifications));
-      }
-    }
-
     useEffect( () => {
-      getAllNotifications();
-    }, []);
+      setNotifications(notifs);
+      if (notifs.length > notifications.length) {
+        triggerNotification();
+      }
+    }, [notifs]);
 
     return(
         <View style={{flex: 1, flexDirection: 'column' }}>
