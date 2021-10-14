@@ -1,11 +1,72 @@
 import { View, Text, StyleSheet, ScrollView, Button} from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DataTable } from 'react-native-paper';
 import MapView, { Marker } from 'react-native-maps';
+import * as Notifications from 'expo-notifications';
+
+const defaultNotifications = [
+  {
+      _id: 1,
+      title: 'Mount Hira College', 
+      date: '19/09/21',
+      time: '8:10am-4:45pm',
+      tier: 'Tier 1',
+      type: 'Nearby',
+      coords: {
+          latitude: -37.8136,
+          longitude: 144.9631
+      }
+  },
+  {
+      _id: 2,
+      title: 'Kmart Wangaratta', 
+      date: '25/09/21',
+      time: '10:10am-2:45pm',
+      tier: 'Tier 2',
+      type: 'Match',
+      coords: {
+          latitude: -37.81236,
+          longitude: 144.9831
+      }
+  }
+] 
+
+
+
+
  
 const NotificationScreen = () => {
 
-    const notifications = [
+    const [notifications, setNotifications] = useState(defaultNotifications)
+
+    const [selectedNotif, setSelectedNotif] = useState(notifications[0]);
+
+    const handlePress = (notif) => {
+        setSelectedNotif(notif);
+    }
+
+    const mapRegion = {
+        latitude: -37.8136,
+        longitude: 144.9631,
+        latitudeDelta: 0.0922,
+        longitudeDelta: 0.0421
+    };  
+
+    const triggerNotification = () => {
+        Notifications.scheduleNotificationAsync({
+          content: {
+            title: "New Notification",
+            body: "Tap for more details"
+          },
+          trigger: {
+            seconds: 5
+          }
+        });
+      }
+
+    const getAllNotifications = () => {
+      //API call resp = axios.get(BASE_URL + 'getNotifications', username);
+      const newNotifications = [
         {
             _id: 1,
             title: 'Mount Hira College', 
@@ -29,33 +90,29 @@ const NotificationScreen = () => {
                 latitude: -37.81236,
                 longitude: 144.9831
             }
-        }
-    ]
-
-    const [selectedNotif, setSelectedNotif] = useState(notifications[0]);
-
-    const handlePress = (notif) => {
-        setSelectedNotif(notif);
+        },
+        {
+          _id: 3,
+          title: 'Kmart Wangaratta', 
+          date: '25/09/21',
+          time: '10:10am-2:45pm',
+          tier: 'Tier 2',
+          type: 'Match',
+          coords: {
+              latitude: -37.81236,
+              longitude: 144.9831
+          }
+      },
+      ];
+      if (newNotifications.length > notifications.length) {
+        triggerNotification();
+        setNotifications((newNotifications));
+      }
     }
 
-    const mapRegion = {
-        latitude: -37.8136,
-        longitude: 144.9631,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421
-    };  
-
-    const triggerNotification = () => {
-        Notifications.scheduleNotificationAsync({
-          content: {
-            title: "Exposure Site Nearby",
-            body: "Tap for more details"
-          },
-          trigger: {
-            seconds: 5
-          }
-        });
-      }
+    useEffect( () => {
+      getAllNotifications();
+    }, []);
 
     return(
         <View style={{flex: 1, flexDirection: 'column' }}>
