@@ -1,14 +1,12 @@
 package com.example.demo.controller;
 
+import com.example.demo.model.Coords;
 import com.example.demo.model.ExposureSite;
 import com.example.demo.model.User;
 import com.example.demo.service.SiteService;
 import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -29,6 +27,12 @@ public class siteController {
     @GetMapping("/sites")
     public List<ExposureSite> getAllExposureSite() throws ExecutionException, InterruptedException {
         return siteService.getSiteDetails();
+    }
+
+    @GetMapping("/getCloseSites")
+    public List<ExposureSite> getCloseSites(@RequestBody Coords coords) throws ExecutionException, InterruptedException {
+        List<ExposureSite> list = siteService.getCloseSites(coords);
+        return list;
     }
 
 }
