@@ -32,7 +32,8 @@
     "react-navigation": "^4.4.4",
     "react-navigation-header-buttons": "^9.0.0",
     "react-navigation-stack": "^2.10.4",
-    "expo-task-manager": "~9.2.2"
+    "expo-task-manager": "~9.2.2",
+    "expo-sensors": "~10.2.2"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0"

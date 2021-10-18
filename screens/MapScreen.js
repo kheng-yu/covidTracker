@@ -5,6 +5,7 @@ import { Searchbar, DataTable } from 'react-native-paper';
 import * as Notifications from 'expo-notifications';
 import * as TaskManager from 'expo-task-manager';
 import * as Location from 'expo-location';
+import { DeviceMotion } from 'expo-sensors';
 
 const LOCATION_TASK_NAME = 'background-location-task';
 
@@ -108,64 +109,48 @@ const MapScreen = props => {
       }
 
     // Background tracking
-    const requestPermissions = async () => {
+    async function requestPermissions() {
         await Location.requestForegroundPermissionsAsync();
         await Location.requestBackgroundPermissionsAsync();
     };
 
-    const checkPermissions = async () => {
-        const { statusForeground } = await Location.getForegroundPermissionsAsync();
-        const { statusBackground } = await Location.getBackgroundPermissionsAsync();
-        if (statusForeground === 'granted' && statusBackground === 'granted') {
-            return true;
-        }
-        return false;
+    async function checkPermissions() {
+        statusForeground = await Location.getForegroundPermissionsAsync();
+        statusBackground = await Location.getBackgroundPermissionsAsync();
+        const granted = await statusForeground.status === "granted" && await statusBackground.status === "granted";
+        return granted;
     };
 
-    const [isEnabled, setIsEnabled] = useState(false);
+    (async () => {
+        if (await checkPermissions() == false) {
+            await requestPermissions();
+        }
+        if (await checkPermissions() == true) {
+            try {
+                await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+                    accuracy: Location.Accuracy.High,
+                    timeInterval: 1000 * 60 * 10, // Every ten minutes
+                    distanceInterval: 0,
+                });
+            } catch (e) {
+                console.error(e);
+            }
+        }
+    })()
 
-    const toggleSwitch = () => {
-        if (isEnabled) {
-            stopLocationTracking();
-        } else {
-            startLocationTracking();
-        }
-    }
+    DeviceMotion.addListener((deviceMotionData) => {
+        if (deviceMotionData.rotationRate.alpha +
+            deviceMotionData.rotationRate.beta +
+            deviceMotionData.rotationRate.gamma >= 80) {
+                console.log("Shaking?" + new Date());
+            }
+    });
+    DeviceMotion.setUpdateInterval(1000);
 
-    const startLocationTracking = async () => {
-        if (!checkPermissions()) {
-            requestPermissions();
-        }
-        if (checkPermissions()) {
-            await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
-                accuracy: Location.Accuracy.High,
-                timeInterval: 1000 * 60 * 10, // Every ten minutes
-                distanceInterval: 0,
-            });
-            setIsEnabled(true);
-        }
-    };
-
-    const stopLocationTracking = async () => {
-        if (TaskManager.isTaskDefined(LOCATION_TASK_NAME)) {
-            await Location.stopLocationUpdatesAsync(LOCATION_TASK_NAME);
-            setIsEnabled(false);
-        }
-    };
 
     return (
         <View style={{flex: 1, flexDirection: 'column' }}>
             <Button title="Send Notification" onPress={triggerNotification} />
-
-            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <Text>Enable background location</Text>
-                <Switch
-                    trackColor={{ false: "#767577", true: "#81b0ff" }}
-                    thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
-                    onValueChange={toggleSwitch}
-                    value={isEnabled}
-                />
-            </View>
 
             <MapView 
                 style={styles.map}
