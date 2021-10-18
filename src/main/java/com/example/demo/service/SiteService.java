@@ -46,8 +46,8 @@ public class SiteService {
         List<ExposureSite> exposureSiteList = new ArrayList<>();
         ExposureSite exposureSite = null;
         int i = 10;
-//        while (iterator.hasNext()){
-        while ( i-- > 0 && iterator.hasNext()){
+        while (iterator.hasNext()){
+//        while ( i-- > 0 && iterator.hasNext()){
             DocumentReference documentReference = iterator.next();
             ApiFuture<DocumentSnapshot> future = documentReference.get();
             DocumentSnapshot document = future.get();
