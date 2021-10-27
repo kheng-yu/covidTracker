@@ -58,6 +58,7 @@ public class ExposureSite {
     private String exposureTime;
     private String tier;
     private Coords coords;
+    private double dist;
 
 
 
@@ -256,13 +257,6 @@ public class ExposureSite {
         this.coords = coords;
     }
 
-    //get functions to compare
-//    public double getlat (){
-//        return coords.getLatitude();
-//    }
-//    public double getlng (){
-//        return coords.getLongitude();
-//    }
     @JsonIgnore
     public Timestamp getStartTime() {
         return  Util.convertStringToTimestamp(exposureDate + " " +exposureTimeStart24);
@@ -273,7 +267,13 @@ public class ExposureSite {
         return Util.convertStringToTimestamp(exposureDate + " " + exposureTimeEnd24);
     }
 
+    public double getDist() {
+        return dist;
+    }
 
+    public void setDist(double dist) {
+        this.dist = dist;
+    }
 
     @Override
     public String toString() {

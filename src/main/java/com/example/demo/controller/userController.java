@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.model.ExposureSite;
 import com.example.demo.service.UserService;
 import com.example.demo.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +46,8 @@ public class userController {
         return userService.deleteUser(name);
     }
 
-    @GetMapping("/getExposureSitesByUser/{id}")
-    public List<User> getUserExposureSites(@PathVariable String id) throws ExecutionException, InterruptedException {
+    @GetMapping("/getExposureSitesByUserID/{id}")
+    public List<ExposureSite> getUserExposureSites(@PathVariable String id) throws ExecutionException, InterruptedException {
 
         return userService.getUserExposureSites(id);
     }
@@ -57,18 +58,3 @@ public class userController {
 
 }
 
-
-
-//    @GetMapping("/getUsers")
-//    public List<User> getUsers() throws ExecutionException, InterruptedException {
-//
-//
-//    }
-//        List<User> userList = new ArrayList<>();
-//        CollectionReference users = db.getFirebase().collection("users");
-//        ApiFuture<QuerySnapshot> query = users.get();
-//        for(DocumentSnapshot doc: query.get().getDocuments()){
-//            User stu = doc.toObject(User.class);
-//            userList.add(stu);
-//        }
-//        return userList;

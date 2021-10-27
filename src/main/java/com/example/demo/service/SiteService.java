@@ -10,6 +10,7 @@ import com.google.cloud.firestore.Firestore;
 import com.google.firebase.cloud.FirestoreClient;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -21,6 +22,7 @@ import static com.example.demo.service.Util.SENSITIVITY;
 public class SiteService {
     private static final String COLLECTION_NAME = "Exposure Sites";
 //    private final double SENSITIVITY = 100.0;
+    DecimalFormat df = new DecimalFormat("#.###");
 
 
     public ExposureSite getSiteDetailsById(String dhid) throws ExecutionException, InterruptedException {
@@ -65,8 +67,9 @@ public class SiteService {
         for(ExposureSite site : allExposureSiteList){
             double dis = Util.calcDist(site.getCoords(), coords);
             if(dis <  SENSITIVITY/1000){
+                site.setDist(Double.parseDouble(df.format(dis)));
                 closeExposureSiteList.add(site);
-                System.out.println("this distance is " + dis);
+//                System.out.println("this distance is " + dis);
             }
         }
 

@@ -12,6 +12,7 @@ import com.google.firebase.cloud.FirestoreClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -23,13 +24,14 @@ import static com.example.demo.service.Util.SENSITIVITY;
 public class UserService {
 
     private static final String COLLECTION_NAME = "users";
+    DecimalFormat df = new DecimalFormat("#.###");
 
     @Autowired
     private SiteService siteService;
 
     public String saveUser(User user) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
-        ApiFuture<WriteResult> collectionApiFuture= dbFirestore.collection(COLLECTION_NAME).document(user.getName()).set(user);
+        ApiFuture<WriteResult> collectionApiFuture= dbFirestore.collection(COLLECTION_NAME).document(String.valueOf(user.getTime())).set(user);
 
         return collectionApiFuture.get().getUpdateTime().toString();
     }
@@ -82,12 +84,12 @@ public class UserService {
         return name +"has been delete successfully";
     }
 
-    public List<User> getUserExposureSites(String id) throws ExecutionException, InterruptedException {
+    public List<ExposureSite> getUserExposureSites(String id) throws ExecutionException, InterruptedException {
         Firestore dbFirestore = FirestoreClient.getFirestore();
         Iterable<DocumentReference> documentReferences = dbFirestore.collection(COLLECTION_NAME).listDocuments();
         Iterator<DocumentReference> iterator = documentReferences.iterator();
 
-        List<User> userExposureList = new ArrayList<>();
+        List<ExposureSite> exposureSiteList = new ArrayList<>();
         User user = null;
         List<ExposureSite> ExposureSites = siteService.getSiteDetails();
 
@@ -96,20 +98,26 @@ public class UserService {
             ApiFuture<DocumentSnapshot> future = documentReference.get();
             DocumentSnapshot document = future.get();
             user = document.toObject(User.class);
-            System.out.println(user);
+
+
             if(user.getId().equals(id)){
                 Coords userCoords = new Coords(user.getLat(), user.getLng());
                 for(ExposureSite site: ExposureSites){
-                    if(user.getTimestamp().after(site.getStartTime()) && user.getTimestamp().before(site.getEndTime())) {
-                        if (Util.calcDist(userCoords, site.getCoords()) < SENSITIVITY / 1000) {
-                            userExposureList.add(user);
+
+                    if(user.getTime().after(site.getStartTime()) && user.getTime().before(site.getEndTime())) {
+                        double dist = Util.calcDist(userCoords, site.getCoords());
+                        if ( dist < SENSITIVITY / 1000) {
+                            site.setDist(Double.parseDouble(df.format(dist)));
+                            if(!exposureSiteList.contains(site)){
+                                exposureSiteList.add(site);
+                            }
+
                         }
                     }
                 }
             }
-
         }
-        return userExposureList;
+        return exposureSiteList;
     }
 
 }

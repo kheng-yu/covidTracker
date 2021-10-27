@@ -69,12 +69,6 @@ public class User {
         this.time = time;
     }
 
-    @JsonIgnore
-    public Timestamp getTimestamp() {
-        Timestamp ts = new Timestamp(time.getTime());
-        return ts;
-
-    }
 
     @Override
     public String toString() {
