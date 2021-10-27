@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Button, Switch} from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
@@ -81,6 +82,18 @@ const MapScreen = props => {
             }
         }
     ]
+=======
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, Button} from 'react-native';
+import MapView, { Marker } from 'react-native-maps';
+import { Searchbar, DataTable } from 'react-native-paper';
+
+
+
+
+
+const MapScreen = ({ sites }) => {
+>>>>>>> main
     
     const mapRegion = {
         latitude: -37.8136,
@@ -92,10 +105,10 @@ const MapScreen = props => {
     const [currentMarker, setCurrentMarker] = useState(sites[0]);
     
     const handlePress = (site) => {
-        console.log(currentMarker._id);
         setCurrentMarker(site);
     }
 
+<<<<<<< HEAD
     const triggerNotification = () => {
         Notifications.scheduleNotificationAsync({
           content: {
@@ -152,6 +165,12 @@ const MapScreen = props => {
         <View style={{flex: 1, flexDirection: 'column' }}>
             <Button title="Send Notification" onPress={triggerNotification} />
 
+=======
+
+    return (
+        <View style={{flex: 1, flexDirection: 'column' }}>
+            
+>>>>>>> main
             <MapView 
                 style={styles.map}
                 region={mapRegion}
