@@ -89,45 +89,17 @@ export default function App() {
   const [sites, setSites] = useState(newSites);
 
   TaskManager.defineTask(BACKGROUND_FETCH_NOTIFICATION, async () => {
-    //API call resp = axios.get(BASE_URL + 'getNotifications', username);
-    setNotifications([
-      {
-          _id: 1,
-          title: 'test', 
-          date: '19/09/21',
-          time: '8:10am-4:45pm',
-          tier: 'Tier 1',
-          type: 'Nearby',
-          coords: {
-              latitude: -37.8136,
-              longitude: 144.9631
-          }
-      },
-      {
-          _id: 2,
-          title: 'Kmart Wangaratta', 
-          date: '25/09/21',
-          time: '10:10am-2:45pm',
-          tier: 'Tier 2',
-          type: 'Match',
-          coords: {
-              latitude: -37.81236,
-              longitude: 144.9831
-          }
-      },
-      {
-        _id: 3,
-        title: 'Kmart Wangaratta', 
-        date: '25/09/21',
-        time: '10:10am-2:45pm',
-        tier: 'Tier 2',
-        type: 'Match',
-        coords: {
-            latitude: -37.81236,
-            longitude: 144.9831
+    
+    let resp = await axios.post('http://10.0.2.2:8080/api/getCloseSites', {latitude: -37.0519568, longitude: 146.0894272});
+  
+    if (resp.data) {
+      for (let site of resp.data) {
+        if (!notifications.some(notif => notif._id === site._id)){
+          site.type = 'Nearby';
+          setNotifications(notifications => [...notifications, site]);
         }
-    },
-    ]);
+      }
+    }
     console.log('notifications updated');
     // Be sure to return the successful result type!
     return BackgroundFetch.Result.NewData;
