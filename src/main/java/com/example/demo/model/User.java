@@ -1,7 +1,10 @@
 package com.example.demo.model;
 
+import com.example.demo.service.Util;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.stereotype.Component;
 
+import java.sql.Timestamp;
 import java.util.*;
 
 @Component
@@ -64,6 +67,13 @@ public class User {
 
     public void setTime(Date time) {
         this.time = time;
+    }
+
+    @JsonIgnore
+    public Timestamp getTimestamp() {
+        Timestamp ts = new Timestamp(time.getTime());
+        return ts;
+
     }
 
     @Override

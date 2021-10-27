@@ -1,16 +1,17 @@
 package com.example.demo.model;
 
+import com.example.demo.service.Util;
 import com.fasterxml.jackson.annotation.*;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
+import java.sql.Timestamp;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 
 @Component
 @JsonPropertyOrder({ "_id", "title", "date", "time", "tier", "coords" })
 public class ExposureSite {
 
+    //ignore these attributes
     @JsonIgnore
     private String siteStreetaddress;
     @JsonIgnore
@@ -19,7 +20,6 @@ public class ExposureSite {
     private int sitePostcode;
     @JsonIgnore
     private String siteState;
-
     @JsonIgnore
     private String notes;
     @JsonIgnore
@@ -47,6 +47,7 @@ public class ExposureSite {
     @JsonIgnore
     private String adviceTitle;
 
+    //starts here
     @JsonProperty("_id")
     private int id;
     @JsonProperty("title")
@@ -57,6 +58,10 @@ public class ExposureSite {
     private String exposureTime;
     private String tier;
     private Coords coords;
+
+
+
+
 
 
     public ExposureSite() {
@@ -250,6 +255,25 @@ public class ExposureSite {
     public void setCoords(Coords coords) {
         this.coords = coords;
     }
+
+    //get functions to compare
+//    public double getlat (){
+//        return coords.getLatitude();
+//    }
+//    public double getlng (){
+//        return coords.getLongitude();
+//    }
+    @JsonIgnore
+    public Timestamp getStartTime() {
+        return  Util.convertStringToTimestamp(exposureDate + " " +exposureTimeStart24);
+
+    }
+    @JsonIgnore
+    public Timestamp getEndTime() {
+        return Util.convertStringToTimestamp(exposureDate + " " + exposureTimeEnd24);
+    }
+
+
 
     @Override
     public String toString() {

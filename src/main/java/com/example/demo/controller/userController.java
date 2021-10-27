@@ -45,6 +45,13 @@ public class userController {
         return userService.deleteUser(name);
     }
 
+    @GetMapping("/getExposureSitesByUser/{id}")
+    public List<User> getUserExposureSites(@PathVariable String id) throws ExecutionException, InterruptedException {
+
+        return userService.getUserExposureSites(id);
+    }
+
+
 
 
 
