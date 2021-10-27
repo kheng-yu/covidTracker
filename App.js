@@ -9,6 +9,7 @@ import NotificationScreen from './screens/NotificationScreen';
 import * as Notifications from "expo-notifications";
 import * as BackgroundFetch from 'expo-background-fetch';
 import * as TaskManager from 'expo-task-manager';
+import axios from 'axios';
 
 //Need to rewrite notifications JSX to handle when initial notifications are blank
 var newNotifications = [
@@ -133,64 +134,11 @@ export default function App() {
   });
 
   TaskManager.defineTask(BACKGROUND_FETCH_SITES, async () => {
-    //API call resp = axios.get(BASE_URL + 'getSites');
-    setSites([
-      {
-          _id: '1',
-          title: 'test', 
-          date: '19/09/21',
-          time: '8:10am-4:45pm',
-          tier: 'Tier 1',
-          coords: {
-              latitude: -37.8136,
-              longitude: 144.9631
-          }
-      },
-      {
-          _id: '2',
-          title: 'Kmart Wangaratta', 
-          date: '25/09/21',
-          time: '10:10am-2:45pm',
-          tier: 'Tier 2',
-          coords: {
-              latitude: -37.81236,
-              longitude: 144.9831
-          }
-      },
-      {
-          _id: '3',
-          title: 'Tyres R Us', 
-          date: '30/07/21',
-          time: '7:10am-3:00pm',
-          tier: 'Tier 2',
-          coords: {
-              latitude: -37.8129,
-              longitude: 144.9
-          }
-      },
-      {
-          _id: '4',
-          title: 'Tyres R Us', 
-          date: '30/07/21',
-          time: '7:10am-3:00pm',
-          tier: 'Tier 2',
-          coords: {
-              latitude: -37.8529,
-              longitude: 144.97
-          }
-      },
-      {
-          _id: '5',
-          title: 'Tyres R Us', 
-          date: '30/07/21',
-          time: '7:10am-3:00pm',
-          tier: 'Tier 2',
-          coords: {
-              latitude: -37.8529,
-              longitude: 144.93
-          }
-      }
-  ]);
+    console.log('up to axios get');
+    let resp = await axios.get('http://10.0.2.2:8080/api/sites');
+    const data = resp.data.slice(0,10);
+    setSites(data);
+    
     console.log('sites updated');
     // Be sure to return the successful result type!
     return BackgroundFetch.Result.NewData;
