@@ -29,7 +29,7 @@ public class siteController {
         return siteService.getSiteDetails();
     }
 
-    @GetMapping("/getCloseSites")
+    @PostMapping ("/getCloseSites")
     public List<ExposureSite> getCloseSites(@RequestBody Coords coords) throws ExecutionException, InterruptedException {
         List<ExposureSite> list = siteService.getCloseSites(coords);
         return list;
