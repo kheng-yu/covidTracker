@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Button, Switch} from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { Searchbar, DataTable } from 'react-native-paper';
@@ -22,79 +21,8 @@ TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
   }
 });
 
-
-const MapScreen = props => {
-
-    const sites = [
-        {
-            _id: '1',
-            title: 'Mount Hira College', 
-            date: '19/09/21',
-            time: '8:10am-4:45pm',
-            tier: 'Tier 1',
-            coords: {
-                latitude: -37.8136,
-                longitude: 144.9631
-            }
-        },
-        {
-            _id: '2',
-            title: 'Kmart Wangaratta', 
-            date: '25/09/21',
-            time: '10:10am-2:45pm',
-            tier: 'Tier 2',
-            coords: {
-                latitude: -37.81236,
-                longitude: 144.9831
-            }
-        },
-        {
-            _id: '3',
-            title: 'Tyres R Us', 
-            date: '30/07/21',
-            time: '7:10am-3:00pm',
-            tier: 'Tier 2',
-            coords: {
-                latitude: -37.8129,
-                longitude: 144.9
-            }
-        },
-        {
-            _id: '4',
-            title: 'Tyres R Us', 
-            date: '30/07/21',
-            time: '7:10am-3:00pm',
-            tier: 'Tier 2',
-            coords: {
-                latitude: -37.8529,
-                longitude: 144.97
-            }
-        },
-        {
-            _id: '5',
-            title: 'Tyres R Us', 
-            date: '30/07/21',
-            time: '7:10am-3:00pm',
-            tier: 'Tier 2',
-            coords: {
-                latitude: -37.8529,
-                longitude: 144.93
-            }
-        }
-    ]
-=======
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Button} from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
-import { Searchbar, DataTable } from 'react-native-paper';
-
-
-
-
-
 const MapScreen = ({ sites }) => {
->>>>>>> main
-    
+
     const mapRegion = {
         latitude: -37.8136,
         longitude: 144.9631,
@@ -107,19 +35,6 @@ const MapScreen = ({ sites }) => {
     const handlePress = (site) => {
         setCurrentMarker(site);
     }
-
-<<<<<<< HEAD
-    const triggerNotification = () => {
-        Notifications.scheduleNotificationAsync({
-          content: {
-            title: "Exposure Site Nearby",
-            body: "Tap for more details"
-          },
-          trigger: {
-            seconds: 5
-          }
-        });
-      }
 
     // Background tracking
     async function requestPermissions() {
@@ -142,7 +57,7 @@ const MapScreen = ({ sites }) => {
             try {
                 await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
                     accuracy: Location.Accuracy.High,
-                    timeInterval: 1000 * 60 * 10, // Every ten minutes
+                    timeInterval: 1 * 60 * 10, // Every ten minutes
                     distanceInterval: 0,
                 });
             } catch (e) {
@@ -160,17 +75,9 @@ const MapScreen = ({ sites }) => {
     });
     DeviceMotion.setUpdateInterval(1000);
 
-
     return (
         <View style={{flex: 1, flexDirection: 'column' }}>
-            <Button title="Send Notification" onPress={triggerNotification} />
 
-=======
-
-    return (
-        <View style={{flex: 1, flexDirection: 'column' }}>
-            
->>>>>>> main
             <MapView 
                 style={styles.map}
                 region={mapRegion}

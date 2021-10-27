@@ -2,16 +2,9 @@ import { View, Text, StyleSheet, ScrollView, Button} from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { DataTable } from 'react-native-paper';
 import MapView, { Marker } from 'react-native-maps';
-<<<<<<< HEAD
-
-
-const NotificationScreen = () => {
-=======
 import * as Notifications from 'expo-notifications';
-
  
 const NotificationScreen = ({notifs}) => {
->>>>>>> main
 
     const [notifications, setNotifications] = useState(notifs)
 
@@ -40,15 +33,12 @@ const NotificationScreen = ({notifs}) => {
         });
       }
 
-<<<<<<< HEAD
-=======
     useEffect( () => {
       setNotifications(notifs);
       if (notifs.length > notifications.length) {
         triggerNotification();
       }
     }, [notifs]);
->>>>>>> main
 
     return(
         <View style={{flex: 1, flexDirection: 'column' }}>
