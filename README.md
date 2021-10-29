@@ -17,7 +17,7 @@ Team 02-2 Assignment for COMP90018
                                     }
                                     
  5.getUserExposureSites by ID function: to get user history sites which were close to exposure sites
-   for example: Get request : http://localhost:8080/api/getExposureSitesByUser/001
+   for example: Get request : http://localhost:8080/api/getExposureSitesByUserID/001
                  return [
                             {
                                 "id": "001",
