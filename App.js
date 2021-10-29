@@ -41,13 +41,22 @@ var newSites = [
   },
 ]
 
-const BACKGROUND_FETCH_NOTIFICATION = 'background-fetch-notification';
+const BACKGROUND_FETCH_NOTIFICATION_NEARBY = 'background-fetch-notification-nearby';
+const BACKGROUND_FETCH_NOTIFICATION_MATCH = 'background-fetch-notification-match';
 const BACKGROUND_FETCH_SITES = 'background-fetch-sites';
 
 
 
-async function registerBackgroundFetchAsyncNotifications() {
-  return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_NOTIFICATION, {
+async function registerBackgroundFetchAsyncNotificationsNearby() {
+  return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_NOTIFICATION_NEARBY, {
+    minimumInterval: 1, // 15 minutes
+    stopOnTerminate: false, // android only,
+    startOnBoot: true, // android only
+  });
+}
+
+async function registerBackgroundFetchAsyncNotificationsMatch() {
+  return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_NOTIFICATION_MATCH, {
     minimumInterval: 1, // 15 minutes
     stopOnTerminate: false, // android only,
     startOnBoot: true, // android only
@@ -88,25 +97,41 @@ export default function App() {
   const [notifications, setNotifications] = useState(newNotifications);
   const [sites, setSites] = useState(newSites);
 
-  TaskManager.defineTask(BACKGROUND_FETCH_NOTIFICATION, async () => {
+  TaskManager.defineTask(BACKGROUND_FETCH_NOTIFICATION_NEARBY, async () => {
     
     let resp = await axios.post('http://10.0.2.2:8080/api/getCloseSites', {latitude: -37.0519568, longitude: 146.0894272});
   
     if (resp.data) {
       for (let site of resp.data) {
-        if (!notifications.some(notif => notif._id === site._id)){
+        if (!notifications.some(notif => notif._id === site._id && notif.type === 'Nearby')){
           site.type = 'Nearby';
           setNotifications(notifications => [...notifications, site]);
         }
       }
     }
-    console.log('notifications updated');
+    console.log('nearby notifications updated');
+    // Be sure to return the successful result type!
+    return BackgroundFetch.Result.NewData;
+  });
+
+  TaskManager.defineTask(BACKGROUND_FETCH_NOTIFICATION_MATCH, async () => {
+    //needs to be user's actual id
+    let resp = await axios.get('http://10.0.2.2:8080/api/getExposureSitesByUser/001');
+    console.log(resp.data);
+    // if (resp.data) {
+    //   for (let site of resp.data) {
+    //     if (!notifications.some(notif => notif._id === site._id && notif.type === 'Match')){
+    //       site.type = 'Match';
+    //       setNotifications(notifications => [...notifications, site]);
+    //     }
+    //   }
+    // }
+    console.log('match notifications updated');
     // Be sure to return the successful result type!
     return BackgroundFetch.Result.NewData;
   });
 
   TaskManager.defineTask(BACKGROUND_FETCH_SITES, async () => {
-    console.log('up to axios get');
     let resp = await axios.get('http://10.0.2.2:8080/api/sites');
     const data = resp.data.slice(0,10);
     setSites(data);
@@ -133,9 +158,10 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    registerBackgroundFetchAsyncNotifications();
+    registerBackgroundFetchAsyncNotificationsNearby();
+    registerBackgroundFetchAsyncNotificationsMatch();
     registerBackgroundFetchAsyncSites();
-    console.log('task registered');
+    console.log('tasks registered');
   }, [])
 
   return (
