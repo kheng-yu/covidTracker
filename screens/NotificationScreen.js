@@ -43,7 +43,6 @@ const NotificationScreen = ({notifs}) => {
 
     return(
         <View style={{flex: 1, flexDirection: 'column' }}>
-            <Button title="Send Notification" onPress={triggerNotification} />
             <MapView 
                 style={styles.map}
                 region={mapRegion}
