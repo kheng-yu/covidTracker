@@ -124,16 +124,24 @@ export default function App() {
 
   TaskManager.defineTask(BACKGROUND_FETCH_NOTIFICATION_MATCH, async () => {
     //needs to be user's actual id
-    let resp = await axios.get('http://10.0.2.2:8080/api/getExposureSitesByUser/001');
+    let resp = await axios.get('http://10.0.2.2:8080/api/getExposureSitesByUserID/001');
     console.log(resp.data);
-    // if (resp.data) {
-    //   for (let site of resp.data) {
-    //     if (!notifications.some(notif => notif._id === site._id && notif.type === 'Match')){
-    //       site.type = 'Match';
-    //       setNotifications(notifications => [...notifications, site]);
-    //     }
-    //   }
-    // }
+    if (resp.data) {
+      if (sites[0].title === 'Loading...') {
+        for(let site of resp.data) {
+          site.type = 'Match';
+        }
+        setNotifications(resp.data);
+      }
+      else {
+        for (let site of resp.data) {
+          if (!notifications.some(notif => notif._id === site._id && notif.type === 'Match')){
+            site.type = 'Match';
+            setNotifications(notifications => [...notifications, site]);
+          }
+        }
+      }
+    }
     console.log('match notifications updated');
     // Be sure to return the successful result type!
     return BackgroundFetch.Result.NewData;
