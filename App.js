@@ -15,11 +15,11 @@ import axios from 'axios';
 var newNotifications = [
   {
       _id: 1,
-      title: 'Mount hira', 
-      date: '19/09/21',
-      time: '8:10am-4:45pm',
-      tier: 'Tier 1',
-      type: 'Nearby',
+      title: 'Loading...', 
+      date: 'Loading...',
+      time: 'Loading...',
+      tier: 'Loading...',
+      type: 'Loading...',
       coords: {
           latitude: -37.8136,
           longitude: 144.9631
@@ -30,10 +30,10 @@ var newNotifications = [
 var newSites = [
   {
       _id: '1',
-      title: 'Mount Hira College', 
-      date: '19/09/21',
-      time: '8:10am-4:45pm',
-      tier: 'Tier 1',
+      title: 'Loading...', 
+      date: 'Loading...',
+      time: 'Loading...',
+      tier: 'Loading...',
       coords: {
           latitude: -37.8136,
           longitude: 144.9631
