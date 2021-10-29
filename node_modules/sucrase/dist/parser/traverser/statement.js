@@ -45,6 +45,7 @@ var _typescript = require('../plugins/typescript');
 
 
 
+
 var _tokenizer = require('../tokenizer');
 var _keywords = require('../tokenizer/keywords');
 var _state = require('../tokenizer/state');
@@ -819,7 +820,7 @@ function parseClassMethod(functionStart, isConstructor) {
 
  function parseClassProperty() {
   if (_base.isTypeScriptEnabled) {
-    _tokenizer.eat.call(void 0, _types.TokenType.bang);
+    _tokenizer.eatTypeToken.call(void 0, _types.TokenType.bang);
     _typescript.tsTryParseTypeAnnotation.call(void 0, );
   } else if (_base.isFlowEnabled) {
     if (_tokenizer.match.call(void 0, _types.TokenType.colon)) {

@@ -26,9 +26,7 @@ var _typescript = require('./typescript');
 // Note: These "type casts" are *not* valid TS expressions.
 // But we parse them here and change them when completing the arrow function.
  function typedParseParenItem() {
-  if (_index.eat.call(void 0, _types.TokenType.question)) {
-    _base.state.tokens[_base.state.tokens.length - 1].isType = true;
-  }
+  _index.eatTypeToken.call(void 0, _types.TokenType.question);
   if (_index.match.call(void 0, _types.TokenType.colon)) {
     if (_base.isTypeScriptEnabled) {
       _typescript.tsParseTypeAnnotation.call(void 0, );

@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Dimensions, Image } from 'react-native';
 
 import CustomButton from '../components/CustomButton';
+import {primary} from '../constants/Colors';
 
 const WelcomeScreen = props => {
     
@@ -13,14 +14,14 @@ const WelcomeScreen = props => {
          <View style = {styles.container}>
             <View style={styles.header}>
                 <Image 
-                source={require('../assets/logo.png')}
+                source={require('../assets/logo3.png')}
                 style={styles.logo}
                 resizeMode='cover'
                 />
             </View>
             <View style={styles.footer}>
                 <Text style={styles.title}>Stay Safe Everyone!</Text>
-                <Text style={styles.text}>Sign in with account</Text>
+                <Text style={styles.text}>Sign in with an account</Text>
                 <View style={styles.button}>
                     <CustomButton 
                         title='Get Started !'
@@ -34,7 +35,7 @@ const WelcomeScreen = props => {
 
 
 const {height} = Dimensions.get('screen');
-const height_logo = height * 0.28
+const height_logo = height * 0.5
 
 const styles = StyleSheet.create({
     container: {
@@ -50,7 +51,7 @@ const styles = StyleSheet.create({
     },
     footer: {
         flex: 1,
-        backgroundColor: '#e85865',
+        backgroundColor: '#094183',
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
         paddingVertical: 50,
@@ -67,7 +68,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold' 
     },
     text: {
-        color: 'black',
+        color: 'white',
         marginTop: 5
     },
     button: {

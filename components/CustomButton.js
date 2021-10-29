@@ -11,7 +11,7 @@ const CustomButton  = props => {
             >
                 <Text style={styles.customButtonText}>
                     {props.title + '  '} 
-                    <AntDesign name="rightcircleo" size={18} color="#e65c7a" />
+                    <AntDesign name="rightcircleo" size={18} color="#094183" />
                 </Text>
             </TouchableOpacity>
         </View>
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     },
     customButtonText: {
         fontSize: 18,
-        color: '#e65c7a',
+        color: '#094183',
         fontWeight: 'bold'
     }
 });

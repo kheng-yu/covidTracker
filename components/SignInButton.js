@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
         height: 50,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#e85865',
+        backgroundColor: '#094183',
         borderRadius: 10
     },
     signInButtonText: {        

@@ -19,11 +19,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderRadius: 10,
         borderWidth: 2,
-        borderColor: '#e85865'
+        borderColor: '#094183'
     },
     signUpButtonText: {        
         fontSize: 19,
-        color: '#e85865',
+        color: '#094183',
         fontWeight: 'bold'
     },
 

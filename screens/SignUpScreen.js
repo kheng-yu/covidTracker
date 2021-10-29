@@ -1,24 +1,37 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { View, Text, StyleSheet, Button, TextInput, Platform } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Feather } from '@expo/vector-icons';
+import { Feather, AntDesign } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import SignInButton from '../components/SignInButton';
 import SignUpButton from '../components/SignUpButton';
+import { auth } from '../firebase';
 
 
 const SignUpScreen = props => {
 
-    // helper functions
+    // Helper functions for getting user input when registering
     const [data, setData] = React.useState({
+        username: '',
         email: '',
         password: '',
         confirm_password: '',
+        check_username: false,
         check_textInputChange: false,
         secureTextEntry: true,
         confirm_secureTextEntry: true
     });
+
+    const usernameInputChange = (text) => {
+        if (text.length != 0 ) {
+            setData({
+                ...data,
+                username: text,
+                check_username: true
+            })
+        }
+    }
 
     const emailInputChange = ( text ) => {
         if (text.length != 0) {
@@ -66,8 +79,20 @@ const SignUpScreen = props => {
         })
     };
 
+
+    // Navigate back to Login page if a user has registered
     const GoToSignInHandler = () => {
         props.navigation.navigate('LogIn');
+    }
+
+    const handleSignUp = () => {
+        auth.createUserWithEmailAndPassword(data.email, data.password)
+            .then(userCredentials => {
+                const user = userCredentials.user;
+                console.log(user.email);
+                alert('Successfully Registered!')
+            })
+            .catch(error => alert(error.message))
     }
 
     // screen shown
@@ -81,10 +106,24 @@ const SignUpScreen = props => {
             {/* footer */}
             < View style={styles.footer}>
                 
+                {/* username input */}
+                <Text style={styles.footerText}>Username</Text>
+                <View style={styles.action}>
+                    <AntDesign name="user" size={24} color="#094183" />
+                    <TextInput
+                        placeholder='Enter Your Username'
+                        style={styles.textInput}
+                        autoCapitalize='none'
+                        onChangeText={(username)=> usernameInputChange(username)}
+                    />
+                    { data.check_username ? 
+                    <Feather name="check-circle" size={24} color="green" />
+                    : null }
+                </View>
                 {/* email user input */}
                 <Text style={styles.footerText}>Email</Text>
                 <View style={styles.action}>
-                    <MaterialCommunityIcons name="email-edit-outline" size={24} color="#e85865" />
+                    <MaterialCommunityIcons name="email-edit-outline" size={24} color="#094183" />
                     <TextInput
                         placeholder='Enter Your Email'
                         style={styles.textInput}
@@ -98,7 +137,7 @@ const SignUpScreen = props => {
                 {/* password user input */}
                 <Text style={styles.footerText}>Password</Text>
                 <View style={styles.action}>
-                    <Feather name="key" size={24} color="#e85865" />  
+                    <Feather name="key" size={24} color="#094183" />  
                     <TextInput
                         placeholder='Enter Your Password'
                         style={styles.textInput}
@@ -116,7 +155,7 @@ const SignUpScreen = props => {
                 {/* confirmed password */}
                 <Text style={styles.footerText}>Confirm Password</Text>
                 <View style={styles.action}>
-                    <Feather name="key" size={24} color="#e85865" />  
+                    <Feather name="key" size={24} color="#094183" />  
                     <TextInput
                         placeholder='Enter Your Password'
                         style={styles.textInput}
@@ -136,16 +175,14 @@ const SignUpScreen = props => {
                 <View style={styles.button}>
                     <SignInButton
                         title='Sign Up'
-                        onPress={()=> alert('Clicked')}
+                        onPress= {
+                            handleSignUp
+                        }
                     />
                 </View>
 
-                 {/* sign in button */}
                  <View style={styles.button}>
-                    <SignUpButton
-                        title='Sign In'
-                        onPress={GoToSignInHandler}
-                    />
+                    <Text style={styles.actions} onPress={GoToSignInHandler}>Go Back</Text>
                 </View>
             </View>
         </View>
@@ -156,7 +193,7 @@ const SignUpScreen = props => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#e85865',
+        backgroundColor: '#094183',
     },
     header: {
         flex: 1,
@@ -200,5 +237,6 @@ const styles = StyleSheet.create({
         marginTop: 20
     }
 })
+
 
 export default SignUpScreen

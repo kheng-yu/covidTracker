@@ -47,6 +47,7 @@ export declare function retokenizeSlashAsRegex(): void;
 export declare function pushTypeContext(existingTokensInType: number): boolean;
 export declare function popTypeContext(oldIsType: boolean): void;
 export declare function eat(type: TokenType): boolean;
+export declare function eatTypeToken(tokenType: TokenType): void;
 export declare function match(type: TokenType): boolean;
 export declare function lookaheadType(): TokenType;
 export declare class TypeAndKeyword {

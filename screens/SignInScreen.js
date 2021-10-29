@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { View, Text, StyleSheet, Button, TextInput, Platform, Animated } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
@@ -6,11 +6,12 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import SignInButton from '../components/SignInButton';
 import SignUpButton from '../components/SignUpButton';
+import { auth } from '../firebase'
 
 
 const SignInScreen = props => {
 
-    // helper functions
+    // helper functions for getting user input when logging in
     const [data, setData] = React.useState({
         email: '',
         password: '',
@@ -49,8 +50,27 @@ const SignInScreen = props => {
         })
     };
 
-    const GoToSignUpHandler = () => {
-        props.navigation.navigate('SignUp');
+    // Listener to firebase checking if this user is eligible to login
+    // If a user has logged in, navigate to main page
+    const handleLogIn = () => {
+        auth.signInWithEmailAndPassword(data.email, data.password)
+            .then(userCredentials => {
+                const user = userCredentials.user;
+                console.log(user.email);
+                props.navigation.navigate('Mainpages')
+            })
+            .catch(error => alert(error.message))
+    }
+
+    // Register a user
+    const handleSignUp = () => {
+        auth.createUserWithEmailAndPassword(data.email, data.password)
+            .then(userCredentials => {
+                const user = userCredentials.user;
+                console.log(user.email);
+                alert('Successfully Registered!')
+            })
+            .catch(error => alert(error.message))
     }
 
     // screen shown
@@ -67,7 +87,7 @@ const SignInScreen = props => {
                 {/* email user input */}
                 <Text style={styles.footerText}>Email</Text>
                 <View style={styles.action}>
-                    <MaterialCommunityIcons name="email-edit-outline" size={24} color="#e85865" />
+                    <MaterialCommunityIcons name="email-edit-outline" size={24} color="#094183" />
                     <TextInput
                         placeholder='Enter Your Email'
                         style={styles.textInput}
@@ -81,7 +101,7 @@ const SignInScreen = props => {
                 {/* password user input */}
                 <Text style={styles.footerText}>Password</Text>
                 <View style={styles.action}>
-                    <Feather name="key" size={24} color="#e85865" />  
+                    <Feather name="key" size={24} color="#094183" />  
                     <TextInput
                         placeholder='Enter Your Password'
                         style={styles.textInput}
@@ -101,7 +121,7 @@ const SignInScreen = props => {
                 <View style={styles.button}>
                     <SignInButton
                         title='Sign In'
-                        onPress={()=> alert('Clicked')}
+                        onPress={handleLogIn}
                     />
                 </View>
 
@@ -109,7 +129,7 @@ const SignInScreen = props => {
                  <View style={styles.button}>
                     <SignUpButton
                         title='Sign Up'
-                        onPress={GoToSignUpHandler}
+                        onPress={handleSignUp}
                     />
                 </View>
             </View>
@@ -121,7 +141,7 @@ const SignInScreen = props => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#e85865',
+        backgroundColor: '#094183',
     },
     header: {
         flex: 1,

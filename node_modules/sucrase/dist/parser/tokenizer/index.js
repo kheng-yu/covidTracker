@@ -189,6 +189,13 @@ var IdentifierRole; (function (IdentifierRole) {
   }
 } exports.eat = eat;
 
+ function eatTypeToken(tokenType) {
+  const oldIsType = _base.state.isType;
+  _base.state.isType = true;
+  eat(tokenType);
+  _base.state.isType = oldIsType;
+} exports.eatTypeToken = eatTypeToken;
+
  function match(type) {
   return _base.state.type === type;
 } exports.match = match;

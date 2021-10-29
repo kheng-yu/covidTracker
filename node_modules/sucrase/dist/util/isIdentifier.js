@@ -52,8 +52,19 @@ const RESERVED_WORDS = new Set([
   "public",
   "static",
   "await",
+  // Literals that cannot be used as identifiers
+  "false",
+  "null",
+  "true",
 ]);
 
+/**
+ * Determine if the given name is a legal variable name.
+ *
+ * This is needed when transforming TypeScript enums; if an enum key is a valid
+ * variable name, it might be referenced later in the enum, so we need to
+ * declare a variable.
+ */
  function isIdentifier(name) {
   if (name.length === 0) {
     return false;

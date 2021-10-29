@@ -1,38 +1,15 @@
 import { View, Text, StyleSheet, ScrollView, Button} from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DataTable } from 'react-native-paper';
 import MapView, { Marker } from 'react-native-maps';
+import * as Notifications from 'expo-notifications';
+
  
-const NotificationScreen = () => {
+const NotificationScreen = ({notifs}) => {
 
-    const notifications = [
-        {
-            _id: 1,
-            title: 'Mount Hira College', 
-            date: '19/09/21',
-            time: '8:10am-4:45pm',
-            tier: 'Tier 1',
-            type: 'Nearby',
-            coords: {
-                latitude: -37.8136,
-                longitude: 144.9631
-            }
-        },
-        {
-            _id: 2,
-            title: 'Kmart Wangaratta', 
-            date: '25/09/21',
-            time: '10:10am-2:45pm',
-            tier: 'Tier 2',
-            type: 'Match',
-            coords: {
-                latitude: -37.81236,
-                longitude: 144.9831
-            }
-        }
-    ]
+    const [notifications, setNotifications] = useState(notifs)
 
-    const [selectedNotif, setSelectedNotif] = useState(notifications[0]);
+    const [selectedNotif, setSelectedNotif] = useState(notifs[0]);
 
     const handlePress = (notif) => {
         setSelectedNotif(notif);
@@ -48,14 +25,21 @@ const NotificationScreen = () => {
     const triggerNotification = () => {
         Notifications.scheduleNotificationAsync({
           content: {
-            title: "Exposure Site Nearby",
+            title: "New Notification",
             body: "Tap for more details"
           },
           trigger: {
-            seconds: 5
+            seconds: 1
           }
         });
       }
+
+    useEffect( () => {
+      setNotifications(notifs);
+      if (notifs.length > notifications.length) {
+        triggerNotification();
+      }
+    }, [notifs]);
 
     return(
         <View style={{flex: 1, flexDirection: 'column' }}>
@@ -102,12 +86,11 @@ const styles = StyleSheet.create({
     container: {
       paddingTop: 100,
       paddingHorizontal: 30,
-      flex: 0.4
-
+      flex: 0.4,
+      backgroundColor: '#fff'
     },
     map: {
         flex: 0.6,
- 
     },
   });
 

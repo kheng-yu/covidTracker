@@ -36,6 +36,7 @@ import {
 } from "../plugins/typescript";
 import {
   eat,
+  eatTypeToken,
   IdentifierRole,
   lookaheadType,
   lookaheadTypeAndKeyword,
@@ -819,7 +820,7 @@ export function parsePostMemberNameModifiers() {
 
 export function parseClassProperty() {
   if (isTypeScriptEnabled) {
-    eat(tt.bang);
+    eatTypeToken(tt.bang);
     tsTryParseTypeAnnotation();
   } else if (isFlowEnabled) {
     if (match(tt.colon)) {
