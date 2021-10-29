@@ -1,3 +1,6 @@
+UI-CHANGES
+Changes made in app.js, notification screen and map screen
+
 # covidTracker App
 Team 02-2 Assignment for COMP90018
 
