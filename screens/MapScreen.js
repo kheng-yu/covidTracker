@@ -24,13 +24,16 @@ const MapScreen = ({ sites }) => {
 
 
     return (
-        <View style={{flex: 1, flexDirection: 'column' }}>
+        <View style={{flex: 1, flexDirection: 'column'}}>
             
             <MapView 
                 style={styles.map}
                 region={mapRegion}
                 provider="google"
+                
+                
             >
+
                 {sites.map((site) => {
     
                     return(
@@ -46,43 +49,43 @@ const MapScreen = ({ sites }) => {
                 })}
             </MapView>
 
-            <View style={{flex: 0.25}}>
-                <Text>Selected Site</Text>
+            <View style={{flex: 0.25, padding: 25, backgroundColor: "#FFFFFF"}}>
+                <Text style={{fontWeight: 'bold'}}>Selected Site</Text>
                 <View>
                     <DataTable>
                         <DataTable.Header>
-                            <DataTable.Title>Site</DataTable.Title>
-                            <DataTable.Title>Exposure Period</DataTable.Title>
+                            <DataTable.Title style={{flex:2.5}}>Site</DataTable.Title>
+                            <DataTable.Title style={{flex:1.5}}>Exposure Period</DataTable.Title>
                             <DataTable.Title>Tier</DataTable.Title>
                         </DataTable.Header>
 
                             <DataTable.Row key={currentMarker._id}>
-                                <DataTable.Cell >{currentMarker.title}</DataTable.Cell>
-                                <DataTable.Cell>{currentMarker.date}</DataTable.Cell>
-                                <DataTable.Cell>{currentMarker.tier}</DataTable.Cell>
+                                <DataTable.Cell style={{flex:2.5}}>{currentMarker.title}</DataTable.Cell>
+                                <DataTable.Cell style={{flex:1.5}}>{currentMarker.date}</DataTable.Cell>
+                                <DataTable.Cell><Text style={{fontWeight: "bold"}}>{currentMarker.tier}</Text></DataTable.Cell>
                             </DataTable.Row>
 
                     </DataTable>
                 </View>
             </View>
 
-            <View style={{flex: 0.4}}>
-                <Text>All Sites</Text>
+            <View style={{flex: 0.4, padding: 25, backgroundColor: "#FFFFFF"}}>
+                <Text style={{fontWeight: 'bold'}}>All Sites</Text>
                 <ScrollView>
                     <DataTable>
 
                         <DataTable.Header>
-                            <DataTable.Title>Site</DataTable.Title>
-                            <DataTable.Title>Exposure Period</DataTable.Title>
+                            <DataTable.Title style={{flex:2.5}}>Site</DataTable.Title>
+                            <DataTable.Title style={{flex:1.5}}>Exposure Period</DataTable.Title>
                             <DataTable.Title>Tier</DataTable.Title>
                         </DataTable.Header>
 
                         {sites.map((site) => {
                             return(
                                 <DataTable.Row key={site._id} onPress={() => handlePress(site)}>
-                                    <DataTable.Cell >{site.title}</DataTable.Cell>
-                                    <DataTable.Cell>{site.date}</DataTable.Cell>
-                                    <DataTable.Cell>{site.tier}</DataTable.Cell>
+                                    <DataTable.Cell style={{flex:2.5}}>{site.title}</DataTable.Cell>
+                                    <DataTable.Cell style={{flex:1.5}}>{site.date}</DataTable.Cell>
+                                    <DataTable.Cell><Text style={{fontWeight: "bold"}}>{site.tier}</Text></DataTable.Cell>
                                 </DataTable.Row>
                             );
                         })}
@@ -98,7 +101,7 @@ const MapScreen = ({ sites }) => {
 const styles = StyleSheet.create({
    map: {
        flex: 0.4,
-
+       
    },
 
 });

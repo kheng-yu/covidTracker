@@ -43,6 +43,7 @@ const NotificationScreen = ({notifs}) => {
 
     return(
         <View style={{flex: 1, flexDirection: 'column' }}>
+            <Button style={{fontFamily: 'sans-serif'}}color="#012a58" title="Send Notification" onPress={triggerNotification} />
             <MapView 
                 style={styles.map}
                 region={mapRegion}
@@ -55,23 +56,23 @@ const NotificationScreen = ({notifs}) => {
                 />
             </MapView>
         <ScrollView style={styles.container}>
-          <Text>Recent Notifications</Text>
+          <Text style={{fontWeight: 'bold'}}>Recent Notifications</Text>
           <DataTable>
 
             <DataTable.Header>
-                <DataTable.Title>Type</DataTable.Title>
-                <DataTable.Title>Site</DataTable.Title>
-                <DataTable.Title>Exposure Period</DataTable.Title>
+                <DataTable.Title style={{flex:1.5}}>Type</DataTable.Title>
+                <DataTable.Title style={{flex:2.5}}>Site</DataTable.Title>
+                <DataTable.Title style={{flex:2.5}}>Exposure Period</DataTable.Title>
                 <DataTable.Title>Tier</DataTable.Title>
             </DataTable.Header>
 
-            {notifications.slice(0).reverse().map((notif) => {
+            {notifications.map((notif) => {
                 return(
                     <DataTable.Row key={notif._id} onPress={() => handlePress(notif)}>
-                        <DataTable.Cell>{notif.type}</DataTable.Cell>
-                        <DataTable.Cell >{notif.title}</DataTable.Cell>
-                        <DataTable.Cell>{notif.date}</DataTable.Cell>
-                        <DataTable.Cell>{notif.tier}</DataTable.Cell>
+                        <DataTable.Cell style={{flex:1.5}}>{notif.type}</DataTable.Cell>
+                        <DataTable.Cell style={{flex:2.5}}>{notif.title}</DataTable.Cell>
+                        <DataTable.Cell style={{flex:2.5}}>{notif.date}</DataTable.Cell>
+                        <DataTable.Cell><Text style={{fontWeight: "bold"}}>{notif.tier}</Text></DataTable.Cell>
                     </DataTable.Row>
                 );
             })}
@@ -83,10 +84,10 @@ const NotificationScreen = ({notifs}) => {
 
 const styles = StyleSheet.create({
     container: {
-      paddingTop: 100,
+      paddingTop: 28,
       paddingHorizontal: 30,
-      flex: 0.4
-
+      flex: 0.4,
+      backgroundColor: "#FFFFFF"
     },
     map: {
         flex: 0.6,
