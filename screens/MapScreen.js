@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Button} from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Button, Switch} from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { Searchbar, DataTable } from 'react-native-paper';
+import * as Notifications from 'expo-notifications';
+import * as TaskManager from 'expo-task-manager';
 
 
+import axios from 'axios';
 
 
 
 const MapScreen = ({ sites }) => {
-    
+
     const mapRegion = {
         latitude: -37.8136,
         longitude: 144.9631,
@@ -22,10 +25,13 @@ const MapScreen = ({ sites }) => {
         setCurrentMarker(site);
     }
 
+    
+
+    
 
     return (
         <View style={{flex: 1, flexDirection: 'column' }}>
-            
+
             <MapView 
                 style={styles.map}
                 region={mapRegion}

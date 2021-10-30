@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { DataTable } from 'react-native-paper';
 import MapView, { Marker } from 'react-native-maps';
 import * as Notifications from 'expo-notifications';
-
  
 const NotificationScreen = ({notifs}) => {
 
