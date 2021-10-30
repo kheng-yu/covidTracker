@@ -65,7 +65,7 @@ const NotificationScreen = ({notifs}) => {
                 <DataTable.Title>Tier</DataTable.Title>
             </DataTable.Header>
 
-            {notifications.slice(0).reverse().map((notif) => {
+            {notifications.slice(1).reverse().map((notif) => {
                 return(
                     <DataTable.Row key={notif._id} onPress={() => handlePress(notif)}>
                         <DataTable.Cell>{notif.type}</DataTable.Cell>

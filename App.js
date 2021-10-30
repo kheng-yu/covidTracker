@@ -102,18 +102,11 @@ export default function App() {
     let resp = await axios.post('http://10.0.2.2:8080/api/getCloseSites', {latitude: -37.0519568, longitude: 146.0894272});
   
     if (resp.data) {
-      if (sites[0].title === 'Loading...') {
-        for(let site of resp.data) {
+  
+      for (let site of resp.data) {
+        if (!notifications.some(notif => notif._id === site._id && notif.type === 'Nearby')){
           site.type = 'Nearby';
-        }
-        setNotifications(resp.data);
-      }
-      else {
-        for (let site of resp.data) {
-          if (!notifications.some(notif => notif._id === site._id && notif.type === 'Nearby')){
-            site.type = 'Nearby';
-            setNotifications(notifications => [...notifications, site]);
-          }
+          setNotifications(notifications => [...notifications, site]);
         }
       }
     }
@@ -127,18 +120,10 @@ export default function App() {
     let resp = await axios.get('http://10.0.2.2:8080/api/getExposureSitesByUserID/001');
     console.log(resp.data);
     if (resp.data) {
-      if (sites[0].title === 'Loading...') {
-        for(let site of resp.data) {
+      for (let site of resp.data) {
+        if (!notifications.some(notif => notif._id === site._id && notif.type === 'Match')){
           site.type = 'Match';
-        }
-        setNotifications(resp.data);
-      }
-      else {
-        for (let site of resp.data) {
-          if (!notifications.some(notif => notif._id === site._id && notif.type === 'Match')){
-            site.type = 'Match';
-            setNotifications(notifications => [...notifications, site]);
-          }
+          setNotifications(notifications => [...notifications, site]);
         }
       }
     }
