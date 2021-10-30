@@ -10,6 +10,8 @@ import * as Notifications from "expo-notifications";
 import * as BackgroundFetch from 'expo-background-fetch';
 import * as TaskManager from 'expo-task-manager';
 import axios from 'axios';
+import { DeviceMotion } from 'expo-sensors';
+import * as Location from 'expo-location';
 
 //Need to rewrite notifications JSX to handle when initial notifications are blank
 var newNotifications = [
@@ -44,8 +46,36 @@ var newSites = [
 const BACKGROUND_FETCH_NOTIFICATION_NEARBY = 'background-fetch-notification-nearby';
 const BACKGROUND_FETCH_NOTIFICATION_MATCH = 'background-fetch-notification-match';
 const BACKGROUND_FETCH_SITES = 'background-fetch-sites';
+const LOCATION_TASK_NAME = 'background-location-task';
 
+TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
+  if (error) {
+    console.log(error.message);
+    return;
+  }
+  if (data) {
+    const { locations } = data;
+    let lat = locations[0].coords.latitude;
+    let lng = locations[0].coords.longitude;
+    let tms = new Date(locations[0].timestamp)
 
+    console.log('Received new locations', tms);
+    console.log("Longitude, latitude = " + lat + ", " + lng);
+
+    let resp = axios.post('http://10.0.2.2:8080/api/users', {
+        "id": "002",
+        "name": "amy",
+        "lat": lat,
+        "lng": lng,
+        "time": tms
+    }).then(function (response) {
+        console.log("location posted");
+    }).catch(function (error) {
+        console.log(error);
+    });
+
+  }
+});
 
 async function registerBackgroundFetchAsyncNotificationsNearby() {
   return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_NOTIFICATION_NEARBY, {
@@ -134,13 +164,69 @@ export default function App() {
 
   TaskManager.defineTask(BACKGROUND_FETCH_SITES, async () => {
     let resp = await axios.get('http://10.0.2.2:8080/api/sites');
-    const data = resp.data.slice(0,10);
-    setSites(data);
+    
+    setSites(resp.data);
     
     console.log('sites updated');
     // Be sure to return the successful result type!
     return BackgroundFetch.Result.NewData;
   });
+
+  // Background tracking
+  async function requestPermissions() {
+    try {
+        await Location.requestForegroundPermissionsAsync();
+        await Location.requestBackgroundPermissionsAsync();
+    } catch (e) {
+        console.log(e);
+    }
+};
+
+async function checkPermissions() {
+    try {
+        const statusForeground = await Location.getForegroundPermissionsAsync();
+        const statusBackground = await Location.getBackgroundPermissionsAsync();
+        const granted = await statusForeground.status === "granted" && await statusBackground.status === "granted";
+        return granted;
+    } catch (e) {
+        console.log(e);
+    }
+    return false;
+};
+
+  (async () => {
+    if (await checkPermissions() == false) {
+        await requestPermissions();
+    }
+    if (await checkPermissions() == true) {
+        try {
+            await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+                accuracy: Location.Accuracy.High,
+                timeInterval: 1000*60*5, // Every 5 minutes
+                distanceInterval: 0,
+            });
+        } catch (e) {
+            console.error(e);
+        }
+    }
+})()
+
+
+//Shake to refresh
+  DeviceMotion.setUpdateInterval(1000);
+    DeviceMotion.addListener(async (deviceMotionData) => {
+        if (deviceMotionData.rotationRate.alpha +
+            deviceMotionData.rotationRate.beta +
+            deviceMotionData.rotationRate.gamma >= 40) {
+                console.log("Shaking?" + new Date());
+                await axios.get("http://10.0.2.2:8080/api/sites").then(function (response) {
+                    setSites(response.data)
+                    console.log("Sites updated due to shake refresh");
+                }).catch(function (error) {
+                    console.log("Error" + error);
+                });
+            }
+    });
 
   useEffect(() => {
     //When app is closed

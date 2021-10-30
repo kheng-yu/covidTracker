@@ -4,40 +4,11 @@ import MapView, { Marker } from 'react-native-maps';
 import { Searchbar, DataTable } from 'react-native-paper';
 import * as Notifications from 'expo-notifications';
 import * as TaskManager from 'expo-task-manager';
-import * as Location from 'expo-location';
-import { DeviceMotion } from 'expo-sensors';
+
+
 import axios from 'axios';
 
-const LOCATION_TASK_NAME = 'background-location-task';
 
-TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
-  if (error) {
-    console.log(error.message);
-    return;
-  }
-  if (data) {
-    const { locations } = data;
-    let lat = locations[0].coords.latitude;
-    let lng = locations[0].coords.longitude;
-    let tms = new Date(locations[0].timestamp)
-
-    console.log('Received new locations', tms);
-    console.log("Longitude, latitude = " + lat + ", " + lng);
-
-    let resp = axios.post('http://10.0.2.2:8080/api/users', {
-        "id": "002",
-        "name": "amy",
-        "lat": lat,
-        "lng": lng,
-        "time": tms
-    }).then(function (response) {
-        console.log(response);
-    }).catch(function (error) {
-        console.log(error);
-    });
-
-  }
-});
 
 const MapScreen = ({ sites }) => {
 
@@ -54,59 +25,9 @@ const MapScreen = ({ sites }) => {
         setCurrentMarker(site);
     }
 
-    // Background tracking
-    async function requestPermissions() {
-        try {
-            await Location.requestForegroundPermissionsAsync();
-            await Location.requestBackgroundPermissionsAsync();
-        } catch (e) {
-            console.log(e);
-        }
-    };
+    
 
-    async function checkPermissions() {
-        try {
-            statusForeground = await Location.getForegroundPermissionsAsync();
-            statusBackground = await Location.getBackgroundPermissionsAsync();
-            const granted = await statusForeground.status === "granted" && await statusBackground.status === "granted";
-            return granted;
-        } catch (e) {
-            console.log(e);
-        }
-        return false;
-    };
-
-    (async () => {
-        if (await checkPermissions() == false) {
-            await requestPermissions();
-        }
-        if (await checkPermissions() == true) {
-            try {
-                await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
-                    accuracy: Location.Accuracy.High,
-                    timeInterval: 1000 * 60 * 10, // Every ten minutes
-                    distanceInterval: 0,
-                });
-            } catch (e) {
-                console.error(e);
-            }
-        }
-    })()
-
-    DeviceMotion.setUpdateInterval(1000);
-    DeviceMotion.addListener((deviceMotionData) => {
-        if (deviceMotionData.rotationRate.alpha +
-            deviceMotionData.rotationRate.beta +
-            deviceMotionData.rotationRate.gamma >= 60) {
-                console.log("Shaking?" + new Date());
-                axios.get("http://10.0.2.2:8080/api/sites").then(function (response) {
-                    console.log(response.data);
-                }).catch(function (error) {
-                    console.log("Error" + error);
-                });
-            }
-    });
-
+    
 
     return (
         <View style={{flex: 1, flexDirection: 'column' }}>
