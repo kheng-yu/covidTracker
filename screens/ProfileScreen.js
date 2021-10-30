@@ -44,14 +44,6 @@ const ProfileScreen = props => {
 
   const user = auth.currentUser;
 
-  // if (user != null) {
-  //   const displayName = user.displayName;
-  //   const email = user.email;
-  //   const photoURL = user.photoURL;
-  //   const emailVerified = user.emailVerified;
-  //   const uid = user.uid;
-  // }
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.userInfoSection}>
