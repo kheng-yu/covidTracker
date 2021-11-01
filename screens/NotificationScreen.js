@@ -12,14 +12,20 @@ const NotificationScreen = ({notifs}) => {
 
     const handlePress = (notif) => {
         setSelectedNotif(notif);
+        setMapRegion({
+          latitude: notif.coords.latitude,
+          longitude: notif.coords.longitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421
+      })
     }
 
-    const mapRegion = {
-        latitude: -37.8136,
-        longitude: 144.9631,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421
-    };  
+    const [mapRegion, setMapRegion] = useState({
+      latitude: -37.8136,
+      longitude: 144.9631,
+      latitudeDelta: 0.0922,
+      longitudeDelta: 0.0421
+  });
 
     const triggerNotification = () => {
         Notifications.scheduleNotificationAsync({
@@ -50,7 +56,7 @@ const NotificationScreen = ({notifs}) => {
                 <Marker 
                 key={selectedNotif._id}
                 coordinate={selectedNotif.coords}
-                pinColor={'#096327'}
+                pinColor={'tomato'}
                 />
             </MapView>
         <ScrollView style={styles.container}>

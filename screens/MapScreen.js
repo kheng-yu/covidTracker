@@ -12,17 +12,25 @@ import axios from 'axios';
 
 const MapScreen = ({ sites }) => {
 
-    const mapRegion = {
-        latitude: -37.8136,
-        longitude: 144.9631,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421
-    };  
+
+
+    const [mapRegion, setMapRegion] = useState({
+           latitude: -37.8136,
+           longitude: 144.9631,
+           latitudeDelta: 0.0922,
+           longitudeDelta: 0.0421
+       });
 
     const [currentMarker, setCurrentMarker] = useState(sites[0]);
     
     const handlePress = (site) => {
         setCurrentMarker(site);
+        setMapRegion({
+            latitude: site.coords.latitude,
+            longitude: site.coords.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421
+        })
     }
 
     
