@@ -128,8 +128,11 @@ export default function App() {
   const [sites, setSites] = useState(newSites);
 
   TaskManager.defineTask(BACKGROUND_FETCH_NOTIFICATION_NEARBY, async () => {
-    
-    let resp = await axios.post('http://10.0.2.2:8080/api/getCloseSites', {latitude: -37.0519568, longitude: 146.0894272});
+    let location = await Location.getCurrentPositionAsync({});
+    let resp = await axios.post('http://10.0.2.2:8080/api/getCloseSites', {
+      latitude: location.coords.latitude, 
+      longitude: location.coords.longitude});
+    console.log(location.coords);
   
     if (resp.data) {
   
@@ -172,44 +175,23 @@ export default function App() {
     return BackgroundFetch.Result.NewData;
   });
 
-  // Background tracking
-  async function requestPermissions() {
-    try {
-        await Location.requestForegroundPermissionsAsync();
-        await Location.requestBackgroundPermissionsAsync();
-    } catch (e) {
-        console.log(e);
-    }
-};
-
-async function checkPermissions() {
-    try {
-        const statusForeground = await Location.getForegroundPermissionsAsync();
-        const statusBackground = await Location.getBackgroundPermissionsAsync();
-        const granted = await statusForeground.status === "granted" && await statusBackground.status === "granted";
-        return granted;
-    } catch (e) {
-        console.log(e);
-    }
-    return false;
-};
-
+useEffect(() => {
   (async () => {
-    if (await checkPermissions() == false) {
-        await requestPermissions();
+    let { status } = await Location.requestBackgroundPermissionsAsync();
+    if (status !== 'granted') {
+      console.log('Permission denied');
+      return;
     }
-    if (await checkPermissions() == true) {
-        try {
-            await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
-                accuracy: Location.Accuracy.High,
-                timeInterval: 1000*60*5, // Every 5 minutes
-                distanceInterval: 0,
-            });
-        } catch (e) {
-            console.error(e);
-        }
+
+    if (!await Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME)) {
+      await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
+        accuracy: Location.Accuracy.High,
+        timeInterval: 1000*60*5, // Every 5 minutes
+        distanceInterval: 100,
+    });
     }
-})()
+  })();
+}, []);
 
 
 //Shake to refresh
