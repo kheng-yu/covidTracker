@@ -12,6 +12,14 @@ import * as TaskManager from 'expo-task-manager';
 import axios from 'axios';
 import { DeviceMotion } from 'expo-sensors';
 import * as Location from 'expo-location';
+import { auth } from '../firebase';
+
+const user = auth.currentUser;
+const displayName = user.displayName;
+const email = user.email;
+const photoURL = user.photoURL;
+const emailVerified = user.emailVerified;
+const uid = user.uid;
 
 //Need to rewrite notifications JSX to handle when initial notifications are blank
 var newNotifications = [
@@ -63,8 +71,8 @@ TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
     console.log("Longitude, latitude = " + lat + ", " + lng);
 
     let resp = axios.post('http://10.0.2.2:8080/api/users', {
-        "id": "002",
-        "name": "amy",
+        "id": uid,
+        "name": displayName,
         "lat": lat,
         "lng": lng,
         "time": tms
