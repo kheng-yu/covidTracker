@@ -51,7 +51,7 @@ const ProfileScreen = props => {
             style={styles.userImg} 
             source={require('../assets/avatar.png')}
         />
-        <Text style={styles.editProfile} onPress={GoToEditProfileHandler}>EditProfile</Text>
+        <Text style={styles.editProfile} onPress={GoToEditProfileHandler}>Edit Profile</Text>
         {user.displayName ? 
           <Text style={styles.username}>{user.displayName}</Text> : 
           <Text style={styles.username}>{user.uid}</Text>
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
   button: {
     width: '80%',
     height: 50,
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     alignItems: 'center',
     // borderRadius: 10,
     // borderWidth: 2,

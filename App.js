@@ -172,15 +172,30 @@ const BottomTabScreens = () => {
   return (
     <Tab.Navigator headerMode="none">
       <Tab.Screen name='Notification' children={() => <NotificationScreen notifs={notifications}/>} 
-      options={{tabBarIcon: ({ color, size }) => (
+      options={{
+      headerStyle: { 
+        backgroundColor: "#094183",
+      },
+      headerTintColor: '#FFFFFF',
+      tabBarIcon: ({ color, size }) => (
         <MaterialCommunityIcons name="bell" color='#094183' size={size} />
       ),}} />
       <Tab.Screen name='Map' children={() => <MapScreen sites={sites}/>}
-      options={{tabBarIcon: ({ color, size }) => (
+      options={{
+      headerStyle: { 
+        backgroundColor: "#094183",
+      },
+      headerTintColor: '#FFFFFF',  
+      tabBarIcon: ({ color, size }) => (
         <MaterialCommunityIcons name="map-marker" color='#094183' size={size} />
       ),}} />
       <Tab.Screen name='Profiles' component={ProfileStackScreens}
-      options={{tabBarIcon: ({ color, size }) => (
+      options={{
+      headerStyle: { 
+        backgroundColor: "#094183",
+      },
+      headerTintColor: '#FFFFFF',
+      tabBarIcon: ({ color, size }) => (
         <AntDesign name="user" size={size} color='#094183' />
       ),}} />
     </Tab.Navigator>
@@ -196,15 +211,30 @@ const BottomTabScreens = () => {
        {user ? (
           <Tab.Navigator headerMode="none">
             <Tab.Screen name='Notification' children={() => <NotificationScreen notifs={notifications}/>} 
-            options={{tabBarIcon: ({ color, size }) => (
+            options={{
+            headerStyle: { 
+              backgroundColor: "#094183",
+            },
+            headerTintColor: '#FFFFFF',  
+            tabBarIcon: ({ color, size }) => (
               <MaterialCommunityIcons name="bell" color='#094183' size={size} />
             ),}} />
             <Tab.Screen name='Map' children={() => <MapScreen sites={sites}/>}
-            options={{tabBarIcon: ({ color, size }) => (
+            options={{
+            headerStyle: { 
+              backgroundColor: "#094183",
+            },
+            headerTintColor: '#FFFFFF',
+            tabBarIcon: ({ color, size }) => (
               <MaterialCommunityIcons name="map-marker" color='#094183' size={size} />
             ),}} />
             <Tab.Screen name='Profiles' component={ProfileStackScreens}
-            options={{tabBarIcon: ({ color, size }) => (
+            options={{
+            headerStyle: { 
+              backgroundColor: "#094183",
+            },
+            headerTintColor: '#FFFFFF',
+            tabBarIcon: ({ color, size }) => (
               <AntDesign name="user" size={size} color='#094183' />
             ),}} />
           </Tab.Navigator>
