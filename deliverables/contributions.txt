@@ -18,3 +18,9 @@ Benjamin Yi 1152795:
  - Set up backend data structure and class diagram.
  - Set up and implement a fully functional backend that's not integrated with frontend. Has functionalities like distance calculations between cases, a dictionary of cases, and list of case sorted by closest to user, and firebase connection for update of data, etc.
  - Implement map centering onto specific pin when user clicks/presses on a case in listed table.
+
+Mengzhe Liu 1011254:
+- Set up the back-end server with Spring boot framework. 
+- Linked the back-end server with firebase database. 
+- Completed the CRUD functions of user and exposure sites. 
+- Completed Restful API for Android Application, such as getUser, getExposureSites, checkExposureHistory, etc.
