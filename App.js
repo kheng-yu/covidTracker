@@ -17,6 +17,7 @@ import WelcomeScreen from './screens/WelcomeScreen';
 import SignInScreen from './screens/SignInScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import EditProfileScreen from './screens/EditProfileScreen';
+import CameraScreen from './screens/camera';
 import NotificationScreen from './screens/NotificationScreen';
 import MapScreen from './screens/MapScreen';
 
@@ -162,6 +163,7 @@ const ProfileStackScreens = () => {
     <ProfileStack.Navigator headerMode="none">
       <ProfileStack.Screen name="Profile" component={ProfileScreen} />
       <ProfileStack.Screen name="EditProfile" component={EditProfileScreen} />
+      <ProfileStack.Screen name="Camera" component={CameraScreen} />
     </ProfileStack.Navigator>
   )
 }
@@ -189,7 +191,7 @@ const BottomTabScreens = () => {
       tabBarIcon: ({ color, size }) => (
         <MaterialCommunityIcons name="map-marker" color='#094183' size={size} />
       ),}} />
-      <Tab.Screen name='Profiles' component={ProfileStackScreens}
+      <Tab.Screen name='Profile' component={ProfileStackScreens}
       options={{
       headerStyle: { 
         backgroundColor: "#094183",
@@ -228,7 +230,7 @@ const BottomTabScreens = () => {
             tabBarIcon: ({ color, size }) => (
               <MaterialCommunityIcons name="map-marker" color='#094183' size={size} />
             ),}} />
-            <Tab.Screen name='Profiles' component={ProfileStackScreens}
+            <Tab.Screen name='Profile' component={ProfileStackScreens}
             options={{
             headerStyle: { 
               backgroundColor: "#094183",

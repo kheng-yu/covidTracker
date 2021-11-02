@@ -7,6 +7,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import SignInButton from '../components/SignInButton';
 import SignUpButton from '../components/SignUpButton';
 import { auth } from '../firebase'
+import * as firebase from 'firebase';
 
 
 const SignInScreen = props => {
@@ -68,10 +69,32 @@ const SignInScreen = props => {
             .then(userCredentials => {
                 const user = userCredentials.user;
                 console.log(user.email);
-                alert('Successfully Registered!')
+                
+
+                firebase.firestore().collection("user info").doc(user.uid)
+                .set({
+                    uid: user.uid,
+                    Img: user.photoURL,
+                    email: user.email,
+                    name: null,
+                    phoneNum: null,
+                    country: null,
+                    city: null
+                })
+                .then(() => {
+                    console.log("Document successfully written!");
+                })
+                .catch((error) => {
+                    console.error(error.message);
+                });
+
+
             })
             .catch(error => alert(error.message))
+
+            alert('Successfully Registered!')
     }
+
 
     // screen shown
     return (

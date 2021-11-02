@@ -1,53 +1,139 @@
-import React, {useState} from 'react';
-import { View, Text, StyleSheet, SafeAreaView, Image, TextInput, TouchableOpacity} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import { View, Text, StyleSheet, SafeAreaView, Image, TextInput, TouchableOpacity, button} from 'react-native';
 import { MaterialCommunityIcons, AntDesign, Feather, Entypo } from '@expo/vector-icons';
 import { auth } from '../firebase';
+import * as firebase from 'firebase';
+import { Camera } from 'expo-camera';
 
 const EditProfileScreen = props => {
+
+  // Get user info
+  const user = auth.currentUser;
+  const db = firebase.firestore().collection("user info").doc(user.uid);
   
+  // Helper functions for getting user input when updating
+  const [userPic, setUserPic] = React.useState(null)
+  const [data, setData] = React.useState({
+    name: '',
+    number: '',
+    country: '',
+    city: '',
+  });
+
+  const unsubscribe = props.navigation.addListener('focus', () => {
+    db.get().then((doc) => {
+        if (doc.exists) {
+            setUserPic(doc.data().Img)
+            console.log(userPic)
+        } else {
+            // doc.data() will be undefined in this case
+            console.log("No such document!");
+            console.log(userPic)
+        }
+    }).catch((error) => {
+        console.log("Error getting document:", error);
+    })
+
+  });
+
+
+  const nameInputChange = (text) => {
+    if (text.length > 0){
+       setData({
+        ...data,
+        name: text
+      })
+    }
+  }
+
+  const phoneNumInputChange = (number) => {
+    if (number.length > 0){
+      setData({
+        ...data,
+        number: number
+      })
+    }
+  }
+
+  const countryInputChange = (text) => {
+    if (text.length > 0){
+      setData({
+        ...data,
+        country: text
+      })
+    }
+  }
+
+  const cityInputChange = (text) => {
+    if (text.length > 0){
+      setData({
+        ...data,
+        city: text
+      })
+    }
+  }
+
+  const updateHandlder = () => {
+    db.update({
+      name: data.name,
+      phoneNum: data.number,
+      country: data.country,
+      city: data.city
+    })
+    .then(() => {
+      console.log("Document successfully written!");
+    })
+    .catch((error) => {
+      console.error(error.message);
+    });
+
+    alert('Successfully Updated!')
+  }
+
+  // Change Profile Pic
+  const openCamera = () => {
+    props.navigation.navigate('Camera')
+  }
+
+
+  // Navigate to previous profile page
   const GoBackHandler =() => {
     props.navigation.navigate('Profile')
-  }
-  
-  const user = auth.currentUser;
+  };
 
+  
+  // rendering UI
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.userInfoSection}>
         <Image 
             style={styles.userImg} 
-            source={require('../assets/avatar.png')}
+            source={{uri: userPic != null ? userPic : 'https://www.seekpng.com/png/detail/428-4287240_no-avatar-user-circle-icon-png.png' }}
         />
-        <Text style={styles.selectText}>Select Avator</Text>
+        <TouchableOpacity onPress={openCamera}>
+          <Text style={styles.selectText}>Let's take a selfie!</Text>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.placeHolder}> 
         <AntDesign name="user" size={24} color="#094183" />
         <TextInput
           style={styles.textInput}
-          placeholder='Username'
+          placeholder='Name'
           autoCapitalize='none'
           autoCorrect={false}
+          onChangeText={(name)=> nameInputChange(name)}
         />
       </View>
 
       <View style={styles.placeHolder}> 
-        <MaterialCommunityIcons name="email-edit-outline" size={24} color="#094183" />
+        <Feather name="phone-call" size={24} color="#094183" />
         <TextInput
           style={styles.textInput}
-          placeholder='Change my email'
+          placeholder='Phone Number'
           autoCapitalize='none'
           autoCorrect={false}
-        />
-      </View>
-
-      <View style={styles.placeHolder}> 
-        <Feather name="key" size={24} color="#094183" />
-        <TextInput
-          style={styles.textInput}
-          placeholder='Change my password'
-          autoCapitalize='none'
-          autoCorrect={false}
+          onChangeText={(number)=> phoneNumInputChange(number)}
         />
       </View>
 
@@ -58,25 +144,27 @@ const EditProfileScreen = props => {
           placeholder='Country'
           autoCapitalize='none'
           autoCorrect={false}
+          onChangeText={(country)=> countryInputChange(country)}
         />
       </View>
 
       <View style={styles.placeHolder}> 
-        <MaterialCommunityIcons name="city" size={24} color="#094183" />
+        <MaterialCommunityIcons name="city-variant-outline" size={24} color="#094183" />
         <TextInput
           style={styles.textInput}
           placeholder='City'
           autoCapitalize='none'
           autoCorrect={false}
+          onChangeText={(city)=> cityInputChange(city)}
         />
       </View>
 
       <View style={styles.updateButton}>
-        <TouchableOpacity onPress={()=>{}}>
+        <TouchableOpacity onPress={updateHandlder}>
             <Text style={styles.updateText}>Update Profile</Text>
         </TouchableOpacity> 
       </View>
-
+      
       <View style={styles.goBackButton}>
         <TouchableOpacity onPress={GoBackHandler}>
             <Text style={styles.GoBackText}>Go Back</Text>
@@ -98,9 +186,10 @@ const styles = StyleSheet.create({
   userInfoSection: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 40
+    marginBottom: 30
   },
   userImg: {
+    marginTop: 10,
     height: 100,
     width: 100,
     borderRadius: 75,
@@ -132,7 +221,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 2,
     borderColor: '#094183',
-    marginTop: 50,
+    marginTop: 20,
+    marginBottom: 5,
   },
   updateText: {
     fontSize: 20,
@@ -144,15 +234,14 @@ const styles = StyleSheet.create({
     height: 50,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20
+    // marginTop: 5,
+    // marginBottom: 5
   },
   GoBackText: {
     fontSize: 16,
     color: '#094183',
     fontWeight: 'bold'
   }
-
-
 });
 
 export default EditProfileScreen;

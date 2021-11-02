@@ -1,17 +1,40 @@
-import React, { useState }from 'react';
+import React, { useState, Component }from 'react';
 import { View, Text, StyleSheet, SafeAreaView, FlatList, Image, TouchableOpacity} from 'react-native';
 import { Entypo } from '@expo/vector-icons';
 import { auth } from '../firebase';
+import * as firebase from 'firebase';
 
 
 const ProfileScreen = props => {
-  
+
+  const [userData, setUserData] = useState(null)
+  const user = auth.currentUser;
+  const db = firebase.firestore();
+  const docRef = db.collection('user info').doc(user.uid);
+
+  const unsubscribe = props.navigation.addListener('focus', () => {
+    docRef.get().then((doc) => {
+      if (doc.exists) {
+          setUserData(doc.data())
+          console.log(userData)
+      } else {
+          // doc.data() will be undefined in this case
+          console.log("No such document!");
+          console.log(userData)
+      }
+    }).catch((error) => {
+        console.log("Error getting document:", error);
+    })
+  });
+
   const GoToEditProfileHandler = () => {
     props.navigation.navigate('EditProfile')
   }
 
-  const GoToLogInHandler = () => {
-    props.navigation.navigate('LogIn')
+  const handleLogOut = () => {
+    auth.signOut().then(() => {
+      props.navigation.navigate('LogIn')
+    }).catch(error => alert(error.message))
   }
 
   const [DATA, setDATA] = useState([
@@ -42,25 +65,23 @@ const ProfileScreen = props => {
     },
   ])
 
-  const user = auth.currentUser;
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.userInfoSection}>
         <Image 
             style={styles.userImg} 
-            source={require('../assets/avatar.png')}
+            source={{uri: userData ? userData.Img : 'https://www.seekpng.com/png/detail/428-4287240_no-avatar-user-circle-icon-png.png' }}
         />
         <Text style={styles.editProfile} onPress={GoToEditProfileHandler}>Edit Profile</Text>
-        {user.displayName ? 
-          <Text style={styles.username}>{user.displayName}</Text> : 
+        {userData ? 
+          <Text style={styles.username}>{userData.name}</Text> : 
           <Text style={styles.username}>{user.uid}</Text>
         }
       </View>
     
       <View style={styles.row}>
         <Entypo name="email" size={20} color="#777777" />
-        <Text style={{color: '#777777', marginLeft: 10}}>{user.email}</Text>
+        <Text style={{color: '#777777', marginLeft: 10}}>{user.email}</Text> 
       </View>
 
       <View style={styles.locationInfoSection}>
@@ -82,7 +103,7 @@ const ProfileScreen = props => {
       </View>
      
       <View style={styles.button}>
-        <TouchableOpacity onPress={GoToLogInHandler}>
+        <TouchableOpacity onPress={handleLogOut}>
             <Text style={styles.LogOutText}>Log Out</Text>
         </TouchableOpacity> 
       </View>
@@ -102,6 +123,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   userImg: {
+    marginTop: 15,
     height: 100,
     width: 100,
     borderRadius: 75,
@@ -158,8 +180,8 @@ const styles = StyleSheet.create({
     // borderRadius: 10,
     // borderWidth: 2,
     // borderColor: '#094183',
-    marginTop: 20,
-    marginBottom: 20
+    marginTop: 5,
+    marginBottom: 5
   },
   LogOutText: {
     fontSize: 15,
