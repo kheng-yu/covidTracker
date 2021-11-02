@@ -88,11 +88,10 @@ const SignInScreen = props => {
                     console.error(error.message);
                 });
 
+                alert('Successfully Registered!')
 
             })
             .catch(error => alert(error.message))
-
-            alert('Successfully Registered!')
     }
 
 

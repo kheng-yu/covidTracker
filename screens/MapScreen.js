@@ -10,9 +10,8 @@ import * as TaskManager from 'expo-task-manager';
 import axios from 'axios';
 
 
+
 const MapScreen = ({ sites }) => {
-    
-    const MapScreen = ({ sites }) => {
 
     const [mapRegion, setMapRegion] = useState({
            latitude: -37.8136,
@@ -33,7 +32,7 @@ const MapScreen = ({ sites }) => {
         })
     }
 
-
+    
 
     return (
         <View style={{flex: 1, flexDirection: 'column'}}>

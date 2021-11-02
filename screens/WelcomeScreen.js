@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
         paddingVertical: 50,
-        paddingHorizontal: 45
+        paddingHorizontal: 50
     },
     logo: {
         width: height_logo,
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     title: {
         color: 'white',
         marginTop: 5,
-        fontSize: 35,
+        fontSize: 30,
         fontWeight: 'bold' 
     },
     text: {
