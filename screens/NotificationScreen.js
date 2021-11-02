@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { DataTable } from 'react-native-paper';
 import MapView, { Marker } from 'react-native-maps';
 import * as Notifications from 'expo-notifications';
- 
+
 const NotificationScreen = ({notifs}) => {
 
     const [notifications, setNotifications] = useState(notifs)
@@ -88,10 +88,10 @@ const NotificationScreen = ({notifs}) => {
 
 const styles = StyleSheet.create({
     container: {
-      paddingTop: 30,
-      paddingHorizontal: 25,
+      paddingTop: 28,
+      paddingHorizontal: 30,
       flex: 0.4,
-      backgroundColor: "#FFFFFF",
+      backgroundColor: "#FFFFFF"
     },
     map: {
         flex: 0.6,

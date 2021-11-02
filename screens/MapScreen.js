@@ -4,11 +4,7 @@ import MapView, { Marker } from 'react-native-maps';
 import { Searchbar, DataTable } from 'react-native-paper';
 import * as Notifications from 'expo-notifications';
 import * as TaskManager from 'expo-task-manager';
-
-
 import axios from 'axios';
-
-
 
 const MapScreen = ({ sites }) => {
 
@@ -30,10 +26,6 @@ const MapScreen = ({ sites }) => {
             longitudeDelta: 0.0421
         })
     }
-
-    
-
-    
 
     return (
         <View style={{flex: 1, flexDirection: 'column' }}>
@@ -110,7 +102,6 @@ const MapScreen = ({ sites }) => {
 const styles = StyleSheet.create({
    map: {
        flex: 0.4,
-
    },
 
 });
