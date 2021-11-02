@@ -5,3 +5,22 @@ Benjamin Yi 1152795:
  - Implemented street name to longitude/latitude mapper
  - Implemented background + foreground location tracking
  - Implemented shake to refresh data
+ 
+ Conor Rogers 1054182:
+ - Added the markers to the map
+ - Added the list of sites/notifications as a table to each page
+ - Added the tab navigation (to go between map, notification and settings)
+ - Added the phone notifications that trigger with a message and sound when a new notification comes in
+ - Added code to have site data and notification data make API calls to update when the app is in the backgroun
+ - Added code to handle responses from API for notification and site update
+ 
+ Kheng Yu Yeoh 516454:
+ - Set up backend data structure and class diagram.
+ - Set up and implement a fully functional backend that's not integrated with frontend. Has functionalities like distance calculations between cases, a dictionary of cases, and list of case sorted by closest to user, and firebase connection for update of data, etc.
+ - Implement map centering onto specific pin when user clicks/presses on a case in listed table.
+
+Mengzhe Liu 1011254:
+- Set up the back-end server with Spring boot framework. 
+- Linked the back-end server with firebase database. 
+- Completed the CRUD functions of user and exposure sites. 
+- Completed Restful API for Android Application, such as getUser, getExposureSites, checkExposureHistory, etc.

@@ -6,9 +6,9 @@ Group No: 02-2
 
 Group Members:
 1: benjaminchen, benjaminchen@student.unimelb.edu.au
-2: [Username, Email]
-3: [Username, Email]
-4: [Username, Email]
+2: [Conor Rogers, crrog@student.unimelb.edu.au]
+3: kheng-yu, kyyeoh@student.unimelb.edu.au
+4: Mengzhe Liu, mengzhel@student.unimelb.edu.au
 5: [Username, Email]
 6: [Username, Email]
 
@@ -23,7 +23,8 @@ Backend server must be running for both development and production builds
 
 Start backend server (for both development and production):
 1. Navigate to backend folder in IDE
-2. Build Maven project
+2. Build Maven project (right click pom.xml, add as maven project)
+3. Run
 
 Development:
 1. npm install -g expo-cli
