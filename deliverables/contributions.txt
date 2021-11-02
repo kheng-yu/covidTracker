@@ -16,5 +16,5 @@ Benjamin Yi 1152795:
  
  Kheng Yu Yeoh 516454:
  - Set up backend data structure and class diagram.
- - Set up and implement a fully functional backend, such as distance calculations between cases, a dictionary of cases, and list of case sorted by closest to user, firebase connection.
+ - Set up and implement a fully functional backend that's not integrated with frontend. Has functionalities like distance calculations between cases, a dictionary of cases, and list of case sorted by closest to user, and firebase connection for update of data, etc.
  - Implement map centering onto specific pin when user clicks/presses on a case in listed table.
