@@ -1,6 +1,6 @@
  {
    "expo": {
-    "name": "Your App Name",
+    "name": "CovidTracker",
     "icon": "./icon.png",
     "version": "1.0.0",
     "slug": "your-app-slug",

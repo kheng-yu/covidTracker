@@ -1,0 +1,7 @@
+Itemised contributions:
+
+Benjamin Yi 1152795:
+ - Created initial web scraping feature for backend exposure sites
+ - Implemented street name to longitude/latitude mapper
+ - Implemented background + foreground location tracking
+ - Implemented shake to refresh data

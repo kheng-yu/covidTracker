@@ -1,0 +1,39 @@
+################################################################################
+COMP90018 Programming Project Submission
+################################################################################
+
+Group No: 02-2
+
+Group Members:
+1: benjaminchen, benjaminchen@student.unimelb.edu.au
+2: [Username, Email]
+3: [Username, Email]
+4: [Username, Email]
+5: [Username, Email]
+6: [Username, Email]
+
+YouTube Link:
+
+Publicity statement: We authorise the University of Melbourne to use material from our submission for publicity.
+
+Deployment README:
+App is built for Android 11.0
+App is hardcoded to point at http://10.0.2.2:8080 for the backend
+Backend server must be running for both development and production builds
+
+Start backend server (for both development and production):
+1. Navigate to backend folder in IDE
+2. Build Maven project
+
+Development:
+1. npm install -g expo-cli
+2. Open Android Studio, start an Android emulator (Android 11.0+, Play Store enabled)
+3. npm install
+4. npm start
+5. Expo window will open in web browser - click on run Android emulator button on left sidebar
+
+Production:
+1. npm install -g expo-cli
+2. expo build:android -t apk
+3. Follow expo instructions - you will need an expo account (free to create)
+4. adb install CovidTracker.apk (or drag + drop apk file into emulator)
