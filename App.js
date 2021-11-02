@@ -237,16 +237,31 @@ useEffect(() => {
     <NavigationContainer>
       <Tab.Navigator>
         <Tab.Screen name="Notifications" children={() => <NotificationScreen notifs={notifications}/>}
-        options={{tabBarIcon: ({ color, size }) => (
-          <MaterialCommunityIcons name="bell" color={color} size={size} />
+        options={{
+          headerStyle: { 
+            backgroundColor: "#094183",
+          },
+          headerTintColor: '#FFFFFF',
+          tabBarIcon: ({ color, size }) => (
+          <MaterialCommunityIcons name="bell" color={"#094183"} size={size} />
         ),}} />
         <Tab.Screen name="Map" children={() => <MapScreen sites={sites}/>}
-        options={{tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="map-marker" color={color} size={size} />
+        options={{
+          headerStyle: { 
+            backgroundColor: "#094183",
+          },
+          headerTintColor: '#FFFFFF',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="map-marker" color={"#094183"} size={size} />
           ),}} />
         <Tab.Screen name="Settings" component={SettingsScreen}
-        options={{tabBarIcon: ({ color, size }) => (
-          <MaterialCommunityIcons name="cog" color={color} size={size} />
+        options={{
+          headerStyle: { 
+            backgroundColor: "#094183",
+          },
+          headerTintColor: '#FFFFFF',
+          tabBarIcon: ({ color, size }) => (
+          <MaterialCommunityIcons name="cog" color={"#094183"} size={size} />
         ),}} />
       </Tab.Navigator>
     </NavigationContainer>
