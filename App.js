@@ -1,12 +1,12 @@
 
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import { AntDesign } from '@expo/vector-icons';
-import * as Notifications from "expo-notifications";
-import * as BackgroundFetch from 'expo-background-fetch';
-import * as TaskManager from 'expo-task-manager';
-import axios from 'axios';
+// import React, { useEffect, useState } from 'react';
+// import { StyleSheet, Text, View } from 'react-native';
+// import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+// import { AntDesign } from '@expo/vector-icons';
+// import * as Notifications from "expo-notifications";
+// import * as BackgroundFetch from 'expo-background-fetch';
+// import * as TaskManager from 'expo-task-manager';
+// import axios from 'axios';
 
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -18,128 +18,128 @@ import SignInScreen from './screens/SignInScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import EditProfileScreen from './screens/EditProfileScreen';
 import CameraScreen from './screens/camera';
-import NotificationScreen from './screens/NotificationScreen';
-import MapScreen from './screens/MapScreen';
+// import NotificationScreen from './screens/NotificationScreen';
+// import MapScreen from './screens/MapScreen';
 
-/***************************************** NOTIFICATIONS ********************************************************/
+// /***************************************** NOTIFICATIONS ********************************************************/
 
-//Need to rewrite notifications JSX to handle when initial notifications are blank
-var newNotifications = [
-  {
-      _id: 1,
-      title: 'Mount hira', 
-      date: '19/09/21',
-      time: '8:10am-4:45pm',
-      tier: 'Tier 1',
-      type: 'Nearby',
-      coords: {
-          latitude: -37.8136,
-          longitude: 144.9631
-      }
-  },
-];
+// //Need to rewrite notifications JSX to handle when initial notifications are blank
+// var newNotifications = [
+//   {
+//       _id: 1,
+//       title: 'Mount hira', 
+//       date: '19/09/21',
+//       time: '8:10am-4:45pm',
+//       tier: 'Tier 1',
+//       type: 'Nearby',
+//       coords: {
+//           latitude: -37.8136,
+//           longitude: 144.9631
+//       }
+//   },
+// ];
 
-var newSites = [
-  {
-      _id: '1',
-      title: 'Mount Hira College', 
-      date: '19/09/21',
-      time: '8:10am-4:45pm',
-      tier: 'Tier 1',
-      coords: {
-          latitude: -37.8136,
-          longitude: 144.9631
-      }
-  },
-]
+// var newSites = [
+//   {
+//       _id: '1',
+//       title: 'Mount Hira College', 
+//       date: '19/09/21',
+//       time: '8:10am-4:45pm',
+//       tier: 'Tier 1',
+//       coords: {
+//           latitude: -37.8136,
+//           longitude: 144.9631
+//       }
+//   },
+// ]
 
-const BACKGROUND_FETCH_NOTIFICATION = 'background-fetch-notification';
-const BACKGROUND_FETCH_SITES = 'background-fetch-sites';
-
-
-
-async function registerBackgroundFetchAsyncNotifications() {
-  return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_NOTIFICATION, {
-    minimumInterval: 1, // 15 minutes
-    stopOnTerminate: false, // android only,
-    startOnBoot: true, // android only
-  });
-}
-
-async function registerBackgroundFetchAsyncSites() {
-  return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_SITES, {
-    minimumInterval: 1, // 15 minutes
-    stopOnTerminate: false, // android only,
-    startOnBoot: true, // android only
-  });
-}
-
-//For the actual notification that comes up at the top of the screen
-Notifications.setNotificationHandler({
-  handleNotification: async () => {
-    return {
-      shouldShowAlert: true,
-      shouldPlaySound: true
-    };
-  }
-});
+// const BACKGROUND_FETCH_NOTIFICATION = 'background-fetch-notification';
+// const BACKGROUND_FETCH_SITES = 'background-fetch-sites';
 
 
-export default function App() {
+
+// async function registerBackgroundFetchAsyncNotifications() {
+//   return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_NOTIFICATION, {
+//     minimumInterval: 1, // 15 minutes
+//     stopOnTerminate: false, // android only,
+//     startOnBoot: true, // android only
+//   });
+// }
+
+// async function registerBackgroundFetchAsyncSites() {
+//   return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_SITES, {
+//     minimumInterval: 1, // 15 minutes
+//     stopOnTerminate: false, // android only,
+//     startOnBoot: true, // android only
+//   });
+// }
+
+// //For the actual notification that comes up at the top of the screen
+// Notifications.setNotificationHandler({
+//   handleNotification: async () => {
+//     return {
+//       shouldShowAlert: true,
+//       shouldPlaySound: true
+//     };
+//   }
+// });
+
+
+// export default function App() {
   
   
-  const [notifications, setNotifications] = useState(newNotifications);
-  const [sites, setSites] = useState(newSites);
+//   const [notifications, setNotifications] = useState(newNotifications);
+//   const [sites, setSites] = useState(newSites);
   
-  TaskManager.defineTask(BACKGROUND_FETCH_NOTIFICATION, async () => {
+//   TaskManager.defineTask(BACKGROUND_FETCH_NOTIFICATION, async () => {
     
-    let resp = await axios.post('http://10.0.2.2:8080/api/getCloseSites', {latitude: -37.0519568, longitude: 146.0894272});
+//     let resp = await axios.post('http://10.0.2.2:8080/api/getCloseSites', {latitude: -37.0519568, longitude: 146.0894272});
   
-    if (resp.data) {
-      for (let site of resp.data) {
-        if (!notifications.some(notif => notif._id === site._id)){
-          site.type = 'Nearby';
-          setNotifications(notifications => [...notifications, site]);
-        }
-      }
-    }
-    console.log('notifications updated');
-    // Be sure to return the successful result type!
-    return BackgroundFetch.Result.NewData;
-  });
+//     if (resp.data) {
+//       for (let site of resp.data) {
+//         if (!notifications.some(notif => notif._id === site._id)){
+//           site.type = 'Nearby';
+//           setNotifications(notifications => [...notifications, site]);
+//         }
+//       }
+//     }
+//     console.log('notifications updated');
+//     // Be sure to return the successful result type!
+//     return BackgroundFetch.Result.NewData;
+//   });
 
-  TaskManager.defineTask(BACKGROUND_FETCH_SITES, async () => {
-    console.log('up to axios get');
-    let resp = await axios.get('http://10.0.2.2:8080/api/sites');
-    const data = resp.data.slice(0,10);
-    setSites(data);
+//   TaskManager.defineTask(BACKGROUND_FETCH_SITES, async () => {
+//     console.log('up to axios get');
+//     let resp = await axios.get('http://10.0.2.2:8080/api/sites');
+//     const data = resp.data.slice(0,10);
+//     setSites(data);
     
-    console.log('sites updated');
-    // Be sure to return the successful result type!
-    return BackgroundFetch.Result.NewData;
-  });
+//     console.log('sites updated');
+//     // Be sure to return the successful result type!
+//     return BackgroundFetch.Result.NewData;
+//   });
 
-  useEffect(() => {
-    //When app is closed
-    const backgroundSubscription = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log(response);
-    });
-    //When the app is open
-    const foregroundSubscription = Notifications.addNotificationReceivedListener(notification => {
-      console.log(notification);
-    });
+//   useEffect(() => {
+//     //When app is closed
+//     const backgroundSubscription = Notifications.addNotificationResponseReceivedListener(response => {
+//       console.log(response);
+//     });
+//     //When the app is open
+//     const foregroundSubscription = Notifications.addNotificationReceivedListener(notification => {
+//       console.log(notification);
+//     });
   
-    return () => {
-      backgroundSubscription.remove();
-      foregroundSubscription.remove();
-    }
-  }, []);
+//     return () => {
+//       backgroundSubscription.remove();
+//       foregroundSubscription.remove();
+//     }
+//   }, []);
 
-  useEffect(() => {
-    registerBackgroundFetchAsyncNotifications();
-    registerBackgroundFetchAsyncSites();
-    console.log('task registered');
-  }, [])
+//   useEffect(() => {
+//     registerBackgroundFetchAsyncNotifications();
+//     registerBackgroundFetchAsyncSites();
+//     console.log('task registered');
+//   }, [])
 
 /***************************************** NAVIGATIONS ********************************************************/
 
