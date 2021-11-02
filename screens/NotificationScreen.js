@@ -60,23 +60,23 @@ const NotificationScreen = ({notifs}) => {
                 />
             </MapView>
         <ScrollView style={styles.container}>
-          <Text>Recent Notifications</Text>
+          <Text style={{fontWeight: 'bold'}}>Recent Notifications</Text>
           <DataTable>
 
             <DataTable.Header>
-                <DataTable.Title>Type</DataTable.Title>
-                <DataTable.Title>Site</DataTable.Title>
-                <DataTable.Title>Exposure Period</DataTable.Title>
+                <DataTable.Title style={{flex:1.5}}>Type</DataTable.Title>
+                <DataTable.Title style={{flex:2.5}}>Site</DataTable.Title>
+                <DataTable.Title style={{flex:2.5}}>Exposure Period</DataTable.Title>
                 <DataTable.Title>Tier</DataTable.Title>
             </DataTable.Header>
 
             {notifications.slice(1).reverse().map((notif) => {
                 return(
                     <DataTable.Row key={notif._id} onPress={() => handlePress(notif)}>
-                        <DataTable.Cell>{notif.type}</DataTable.Cell>
-                        <DataTable.Cell >{notif.title}</DataTable.Cell>
-                        <DataTable.Cell>{notif.date}</DataTable.Cell>
-                        <DataTable.Cell>{notif.tier}</DataTable.Cell>
+                        <DataTable.Cell style={{flex:1.5}}>{notif.type}</DataTable.Cell>
+                        <DataTable.Cell style={{flex:2.5}}>{notif.title}</DataTable.Cell>
+                        <DataTable.Cell style={{flex:2.5}}>{notif.date}</DataTable.Cell>
+                        <DataTable.Cell><Text style={{fontWeight: "bold"}}>{notif.tier}</Text></DataTable.Cell>
                     </DataTable.Row>
                 );
             })}
@@ -88,10 +88,10 @@ const NotificationScreen = ({notifs}) => {
 
 const styles = StyleSheet.create({
     container: {
-      paddingTop: 100,
-      paddingHorizontal: 30,
-      flex: 0.4
-
+      paddingTop: 30,
+      paddingHorizontal: 25,
+      flex: 0.4,
+      backgroundColor: "#FFFFFF",
     },
     map: {
         flex: 0.6,
