@@ -14,4 +14,7 @@ Benjamin Yi 1152795:
  - Added code to have site data and notification data make API calls to update when the app is in the backgroun
  - Added code to handle responses from API for notification and site update
  
- 
+ Kheng Yu Yeoh 516454:
+ - Set up backend data structure and class diagram.
+ - Set up and implement a fully functional backend, such as distance calculations between cases, a dictionary of cases, and list of case sorted by closest to user, firebase connection.
+ - Implement map centering onto specific pin when user clicks/presses on a case in listed table.
