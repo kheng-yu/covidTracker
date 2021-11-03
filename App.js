@@ -151,7 +151,7 @@ export default function App() {
   const ProfileStackScreens = () => {
     return(
       <ProfileStack.Navigator headerMode="none">
-        <ProfileStack.Screen name="Profile" component={ProfileScreen} />
+        <ProfileStack.Screen name="Profiles" component={ProfileScreen} />
         <ProfileStack.Screen name="EditProfile" component={EditProfileScreen} />
         <ProfileStack.Screen name="Camera" component={CameraScreen} />
       </ProfileStack.Navigator>
