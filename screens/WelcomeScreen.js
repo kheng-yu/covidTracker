@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 30,
         borderTopRightRadius: 30,
         paddingVertical: 50,
-        paddingHorizontal: 50
+        paddingHorizontal: 60
     },
     logo: {
         width: height_logo,
