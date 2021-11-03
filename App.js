@@ -151,7 +151,7 @@ export default function App() {
   const ProfileStackScreens = () => {
     return(
       <ProfileStack.Navigator headerMode="none">
-        <ProfileStack.Screen name="Profiles" component={ProfileScreen} />
+        <ProfileStack.Screen name="Profile" component={ProfileScreen} />
         <ProfileStack.Screen name="EditProfile" component={EditProfileScreen} />
         <ProfileStack.Screen name="Camera" component={CameraScreen} />
       </ProfileStack.Navigator>
@@ -181,7 +181,7 @@ export default function App() {
         tabBarIcon: ({ color, size }) => (
           <MaterialCommunityIcons name="map-marker" color='#094183' size={size} />
         ),}} />
-        <Tab.Screen name='Profile' component={ProfileStackScreens}
+        <Tab.Screen name='Profiles' component={ProfileStackScreens}
         options={{
         headerStyle: { 
           backgroundColor: "#094183",
@@ -327,7 +327,7 @@ export default function App() {
             tabBarIcon: ({ color, size }) => (
               <MaterialCommunityIcons name="map-marker" color='#094183' size={size} />
             ),}} />
-            <Tab.Screen name='Profile' component={ProfileStackScreens}
+            <Tab.Screen name='Profiles' component={ProfileStackScreens}
             options={{
             headerStyle: { 
               backgroundColor: "#094183",
