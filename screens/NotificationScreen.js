@@ -25,7 +25,7 @@ const NotificationScreen = ({notifs}) => {
       longitude: 144.9631,
       latitudeDelta: 0.0922,
       longitudeDelta: 0.0421
-  });
+    });
 
     const triggerNotification = () => {
         Notifications.scheduleNotificationAsync({
