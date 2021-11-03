@@ -80,7 +80,7 @@ TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
     console.log("Longitude, latitude = " + lat + ", " + lng);
 
     let resp = axios.post('http://10.0.2.2:8080/api/users', {
-        "id": "002",
+        "id": user.uid,
         "name": "amy",
         "lat": lat,
         "lng": lng,
@@ -131,68 +131,6 @@ Notifications.setNotificationHandler({
 
 /***************************************** SHOW APP ********************************************************/
 export default function App() {
-
-  /***************************************** NAVIGATIONS ********************************************************/
-
-  // LogInSignUp Navigator
-  const  LogInSignUpNavigator = createStackNavigator();
-  const LogInSignUpScreens = () => {
-    return(
-      <LogInSignUpNavigator.Navigator headerMode="none">
-        <LogInSignUpNavigator.Screen name='Welcome' component={WelcomeScreen}/>
-        <LogInSignUpNavigator.Screen name='LogIn' component={SignInScreen} />
-        <LogInSignUpNavigator.Screen name='Profile' component={ProfileScreen} />
-      </LogInSignUpNavigator.Navigator>
-    )
-  }
-
-  // Profiles Navigator
-  const ProfileStack = createStackNavigator();
-  const ProfileStackScreens = () => {
-    return(
-      <ProfileStack.Navigator headerMode="none">
-        <ProfileStack.Screen name="Profile" component={ProfileScreen} />
-        <ProfileStack.Screen name="EditProfile" component={EditProfileScreen} />
-        <ProfileStack.Screen name="Camera" component={CameraScreen} />
-      </ProfileStack.Navigator>
-    )
-  }
-
-  // Notification Map Profile Navigator
-  const Tab = createBottomTabNavigator();
-  const BottomTabScreens = () => {
-    return (
-      <Tab.Navigator>
-        <Tab.Screen name='Notification' children={() => <NotificationScreen notifs={notifications}/>} 
-        options={{
-        headerStyle: { 
-          backgroundColor: "#094183",
-        },
-        headerTintColor: '#FFFFFF',
-        tabBarIcon: ({ color, size }) => (
-          <MaterialCommunityIcons name="bell" color='#094183' size={size} />
-        ),}} />
-        <Tab.Screen name='Map' children={() => <MapScreen sites={sites}/>}
-        options={{
-        headerStyle: { 
-          backgroundColor: "#094183",
-        },
-        headerTintColor: '#FFFFFF',  
-        tabBarIcon: ({ color, size }) => (
-          <MaterialCommunityIcons name="map-marker" color='#094183' size={size} />
-        ),}} />
-        <Tab.Screen name='Profiles' component={ProfileStackScreens}
-        options={{
-        headerStyle: { 
-          backgroundColor: "#094183",
-        },
-        headerTintColor: '#FFFFFF',
-        tabBarIcon: ({ color, size }) => (
-          <AntDesign name="user" size={size} color='#094183' />
-        ),}} />
-      </Tab.Navigator>
-    )
-  }
 
   const [notifications, setNotifications] = useState(newNotifications);
   const [sites, setSites] = useState(newSites);
@@ -305,38 +243,69 @@ export default function App() {
   
   const user = auth.currentUser;  
 
+  /***************************************** NAVIGATIONS ********************************************************/
+
+  // LogInSignUp Navigator
+  const LogInSignUpNavigator = createStackNavigator();
+  const userExistsNavigator = createStackNavigator();
+  
+  // Profiles Navigator
+  const ProfileStack = createStackNavigator();
+  const ProfileStackScreens = () => {
+    return(
+      <ProfileStack.Navigator headerMode="none">
+        <ProfileStack.Screen name="Profile" component={ProfileScreen} />
+        <ProfileStack.Screen name="EditProfile" component={EditProfileScreen} />
+        <ProfileStack.Screen name="Camera" component={CameraScreen} />
+      </ProfileStack.Navigator>
+    )
+  }
+
+  // Notification Map Profile Navigator
+  const Tab = createBottomTabNavigator();
+  const BottomTabScreens = () => {
+    return (
+      <Tab.Navigator headerMode="none">
+        <Tab.Screen name='Notification' children={() => <NotificationScreen notifs={notifications}/>} 
+        options={{
+        headerStyle: { 
+          backgroundColor: "#094183",
+        },
+        headerTintColor: '#FFFFFF',
+        tabBarIcon: ({ color, size }) => (
+          <MaterialCommunityIcons name="bell" color='#094183' size={size} />
+        ),}} />
+        <Tab.Screen name='Map' children={() => <MapScreen sites={sites}/>}
+        options={{
+        headerStyle: { 
+          backgroundColor: "#094183",
+        },
+        headerTintColor: '#FFFFFF',  
+        tabBarIcon: ({ color, size }) => (
+          <MaterialCommunityIcons name="map-marker" color='#094183' size={size} />
+        ),}} />
+        <Tab.Screen name='Profiles' component={ProfileStackScreens}
+        options={{
+        headerStyle: { 
+          backgroundColor: "#094183",
+        },
+        headerTintColor: '#FFFFFF',
+        tabBarIcon: ({ color, size }) => (
+          <AntDesign name="user" size={size} color='#094183' />
+        ),}} />
+      </Tab.Navigator>
+    )
+  }
+
+  /***************************************** NAVIGATIONS END********************************************************/
+
   return (
     <NavigationContainer>
        {user ? (
-          <Tab.Navigator >
-            <Tab.Screen name='Notification' children={() => <NotificationScreen notifs={notifications}/>} 
-            options={{
-            headerStyle: { 
-              backgroundColor: "#094183",
-            },
-            headerTintColor: '#FFFFFF',  
-            tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="bell" color='#094183' size={size} />
-            ),}} />
-            <Tab.Screen name='Map' children={() => <MapScreen sites={sites}/>}
-            options={{
-            headerStyle: { 
-              backgroundColor: "#094183",
-            },
-            headerTintColor: '#FFFFFF',
-            tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="map-marker" color='#094183' size={size} />
-            ),}} />
-            <Tab.Screen name='Profiles' component={ProfileStackScreens}
-            options={{
-            headerStyle: { 
-              backgroundColor: "#094183",
-            },
-            headerTintColor: '#FFFFFF',
-            tabBarIcon: ({ color, size }) => (
-              <AntDesign name="user" size={size} color='#094183' />
-            ),}} />
-          </Tab.Navigator>
+        <userExistsNavigator.Navigator headerMode="none">
+          <userExistsNavigator.Screen name='Mainpages' component={BottomTabScreens}/>
+          <userExistsNavigator.Screen name='LogIn' component={SignInScreen}/>
+        </userExistsNavigator.Navigator>
        ) : (
         <LogInSignUpNavigator.Navigator headerMode="none">
             <LogInSignUpNavigator.Screen name='Welcome' component={WelcomeScreen}/>
