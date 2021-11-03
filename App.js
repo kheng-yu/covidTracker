@@ -220,7 +220,7 @@ export default function App() {
 
   TaskManager.defineTask(BACKGROUND_FETCH_NOTIFICATION_MATCH, async () => {
     //needs to be user's actual id
-    let resp = await axios.get('http://10.0.2.2:8080/api/getExposureSitesByUserID/001');
+    let resp = await axios.get('http://10.0.2.2:8080/api/getExposureSitesByUserID/' + user.uid);
     console.log(resp.data);
     if (resp.data) {
       for (let site of resp.data) {
