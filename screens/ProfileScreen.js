@@ -1,4 +1,4 @@
-import React, { useState, Component }from 'react';
+import React, { useState }from 'react';
 import { View, Text, StyleSheet, SafeAreaView, FlatList, Image, TouchableOpacity} from 'react-native';
 import { Entypo } from '@expo/vector-icons';
 import { auth } from '../firebase';
@@ -7,6 +7,8 @@ import * as firebase from 'firebase';
 
 const ProfileScreen = props => {
 
+  const [userPic, setUserPic] = useState(null)
+  const [username, setUsername] = useState(null)
   const [userData, setUserData] = useState(null)
   const user = auth.currentUser;
   const db = firebase.firestore();
@@ -15,6 +17,8 @@ const ProfileScreen = props => {
   const unsubscribe = props.navigation.addListener('focus', () => {
     docRef.get().then((doc) => {
       if (doc.exists) {
+          setUserPic(doc.data().Img)
+          setUsername(doc.data().name)
           setUserData(doc.data())
           console.log(userData)
       } else {
@@ -70,11 +74,11 @@ const ProfileScreen = props => {
       <View style={styles.userInfoSection}>
         <Image 
             style={styles.userImg} 
-            source={{uri: userData ? userData.Img : 'https://www.seekpng.com/png/detail/428-4287240_no-avatar-user-circle-icon-png.png' }}
+            source={{uri: userPic != null ? userPic : 'https://www.seekpng.com/png/detail/428-4287240_no-avatar-user-circle-icon-png.png' }}
         />
         <Text style={styles.editProfile} onPress={GoToEditProfileHandler}>Edit Profile</Text>
-        {userData ? 
-          <Text style={styles.username}>{userData.name}</Text> : 
+        {username != null ? 
+          <Text style={styles.username}>{username}</Text> : 
           <Text style={styles.username}>{user.uid}</Text>
         }
       </View>

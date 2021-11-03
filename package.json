@@ -13,14 +13,19 @@
     "@react-navigation/bottom-tabs": "^6.0.7",
     "@react-navigation/native": "^6.0.2",
     "@react-navigation/native-stack": "^6.1.0",
+    "@react-navigation/stack": "^5.14.9",
     "axios": "^0.23.0",
     "expo": "~42.0.1",
     "expo-background-fetch": "^9.2.2",
+    "expo-camera": "~11.2.2",
     "expo-font": "^9.2.1",
     "expo-location": "~12.1.2",
     "expo-notifications": "0.12.3",
     "expo-permissions": "~12.1.1",
+    "expo-sensors": "~10.2.2",
     "expo-status-bar": "~1.0.4",
+    "expo-task-manager": "~9.2.2",
+    "firebase": "^8.10.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
@@ -35,9 +40,7 @@
     "react-native-screens": "~3.4.0",
     "react-navigation": "^4.4.4",
     "react-navigation-header-buttons": "^9.0.0",
-    "react-navigation-stack": "^2.10.4",
-    "expo-task-manager": "~9.2.2",
-    "expo-sensors": "~10.2.2"
+    "react-navigation-stack": "^2.10.4"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0"
