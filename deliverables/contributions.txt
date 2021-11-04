@@ -6,7 +6,7 @@ Benjamin Yi 1152795:
  - Implemented background + foreground location tracking
  - Implemented shake to refresh data
  
- Conor Rogers 1054182:
+Conor Rogers 1054182:
  - Added the markers to the map
  - Added the list of sites/notifications as a table to each page
  - Added the tab navigation (to go between map, notification and settings)
@@ -14,13 +14,23 @@ Benjamin Yi 1152795:
  - Added code to have site data and notification data make API calls to update when the app is in the backgroun
  - Added code to handle responses from API for notification and site update
  
- Kheng Yu Yeoh 516454:
+Kheng Yu Yeoh 516454:
  - Set up backend data structure and class diagram.
  - Set up and implement a fully functional backend that's not integrated with frontend. Has functionalities like distance calculations between cases, a dictionary of cases, and list of case sorted by closest to user, and firebase connection for update of data, etc.
  - Implement map centering onto specific pin when user clicks/presses on a case in listed table.
 
 Mengzhe Liu 1011254:
-- Set up the back-end server with Spring boot framework. 
-- Linked the back-end server with firebase database. 
-- Completed the CRUD functions of user and exposure sites. 
-- Completed Restful API for Android Application, such as getUser, getExposureSites, checkExposureHistory, etc.
+ - Set up the back-end server with Spring boot framework. 
+ - Linked the back-end server with firebase database. 
+ - Completed the CRUD functions of user and exposure sites. 
+ - Completed Restful API for Android Application, such as getUser, getExposureSites, checkExposureHistory, etc.
+
+Jiayi Li 1097419:
+ - Generated initial version of the map view 
+ - Established front-end coding strucutre of the app
+ - Created Welcome page, SignIn/SignUp page and Profile pages
+ - Setup firebase for the  front-end and make it connected and interacted with front-end to store user information
+ - Connected GPS sensor on the phone to get user location history
+ - Connected Camera sensor on the phone to get user profile picture and store it into firebase
+ - Made user profile editing work to update user information and store it into firebase
+ - Final integration of all front-end screens
