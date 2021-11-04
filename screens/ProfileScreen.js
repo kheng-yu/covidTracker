@@ -1,8 +1,9 @@
-import React, { useState }from 'react';
+import React, { useState, useEffect }from 'react';
 import { View, Text, StyleSheet, SafeAreaView, FlatList, Image, TouchableOpacity} from 'react-native';
 import { Entypo } from '@expo/vector-icons';
 import { auth } from '../firebase';
 import * as firebase from 'firebase';
+import * as Location from 'expo-location';
 
 
 const ProfileScreen = props => {
@@ -19,8 +20,8 @@ const ProfileScreen = props => {
       if (doc.exists) {
           setUserPic(doc.data().Img)
           setUsername(doc.data().name)
-          setUserData(doc.data())
-          console.log(userData)
+          // setUserData(doc.data())
+          // console.log(userData)
       } else {
           // doc.data() will be undefined in this case
           console.log("No such document!");
@@ -41,33 +42,82 @@ const ProfileScreen = props => {
     }).catch(error => alert(error.message))
   }
 
-  const [DATA, setDATA] = useState([
-    {
-      location: 'Melbourne Central',
-      date: '27 Oct, 2021',
-      uid: 'asgfhhgfd'
-    },
-    {
-      location: 'St Kilda',
-      date: '22 Oct, 2021',
-      uid: 'asgfhhgfd'
-    },
-    {
-      location: 'Calton',
-      date: '20 Oct, 2021',
-      uid: 'asgfhhgfd'
-    },
-    {
-      location: 'University of Melbourne',
-      date: '18 Oct, 2021',
-      uid: 'asgfhhgfd'
-    },
-    {
-      location: 'QV',
-      date: '16 Oct, 2021',
-      uid: 'asgfhhgfd'
-    },
-  ])
+
+  // Get user location history
+  const [locationServiceEnabled, setLocationServiceEnabled] = useState(false);
+  const [getLocationPermit, setGetLocationPermit] = useState('');
+  const [displayCurrentAddress, setDisplayCurrentAddress] = useState([]);
+  const date = new Date().toDateString()
+
+  useEffect(() => {
+    if (locationServiceEnabled === false) {
+      CheckIfLocationEnabled();
+    }
+    if (getLocationPermit != 'granted') {
+      GetPermissions();
+    }
+  }, []);
+
+  const CheckIfLocationEnabled = async () => {
+    let enabled = await Location.hasServicesEnabledAsync();
+    
+    if (!enabled) {
+      Alert.alert(
+        'Location Service not enabled',
+        'Please enable your location services to continue',
+        [{ text: 'OK' }],
+        { cancelable: false }
+      );
+    } else {
+      setLocationServiceEnabled(enabled);
+    }
+  };
+
+  const GetPermissions = async () => {
+
+      let { status } = await Location.requestForegroundPermissionsAsync();
+    
+      if (status !== 'granted') {
+        Alert.alert(
+          'Permission not granted',
+          'Allow the app to use location service.',
+          [{ text: 'OK' }],
+          { cancelable: false }
+        );
+      } else {
+        setGetLocationPermit(status)
+      }
+    
+  }
+
+  const GetCurrentLocation = async () => {
+
+    console.log(date)
+    console.log(locationServiceEnabled)
+    console.log(getLocationPermit)
+
+    if (getLocationPermit == 'granted') {
+      let { coords } = await Location.getCurrentPositionAsync({accuracy: Location.Accuracy.Lowest});
+      console.log(coords)
+      
+      if (coords) {
+        const { latitude, longitude } = coords;
+        let response = await Location.reverseGeocodeAsync({
+          latitude,
+          longitude
+        });
+
+
+        for (let item of response) {
+          let address = `${item.name}, ${item.city}`;
+          // let postCode = `${item.postalCode}`;
+          const displayLocationName = {address, date}
+          console.log(displayLocationName) 
+          setDisplayCurrentAddress(displayCurrentAddress => [...displayCurrentAddress, displayLocationName])
+        }
+      }
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -89,17 +139,19 @@ const ProfileScreen = props => {
       </View>
 
       <View style={styles.locationInfoSection}>
-        <Text style={{fontWeight: 'bold', fontSize: 16}}>Location History</Text>
+        <TouchableOpacity onPress={GetCurrentLocation}>
+          <Text style={{fontWeight: 'bold', fontSize: 16}}>Update Location History</Text>
+        </ TouchableOpacity>
       </View>
        
       <View style={styles.ListContainer}> 
         <FlatList 
           showsVerticalScrollIndicator={false}
-          data={DATA}
-          keyExtractor={(item) => item.location}
+          data={displayCurrentAddress}
+          keyExtractor={(item) => displayCurrentAddress.indexOf(item)}
           renderItem = {({item}) => (
             <View style={styles.item}> 
-              <Text style={styles.itemText}>{item.location}</Text>
+              <Text style={styles.itemText}>{item.address}</Text>
               <Text style={styles.itemText}>{item.date}</Text>
             </View>
           )}
