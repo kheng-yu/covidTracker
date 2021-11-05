@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -65,8 +65,8 @@ const BACKGROUND_FETCH_NOTIFICATION_MATCH = 'background-fetch-notification-match
 const BACKGROUND_FETCH_SITES = 'background-fetch-sites';
 const LOCATION_TASK_NAME = 'background-location-task';
 
-const user = auth.currentUser; 
 
+//Define what happens when the phone's gps location is sensed
 TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
   if (error) {
     console.log(error.message);
@@ -80,20 +80,19 @@ TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
 
     console.log('Received new locations', tms);
     console.log("Longitude, latitude = " + lat + ", " + lng);
-    console.log(user);
 
     try {
       let resp = axios.post('http://10.0.2.2:8080/api/users', {
-          "id": user.uid,
-          "name": "amy",
-          "lat": lat,
-          "lng": lng,
-          "time": tms
-      }).then(function (response) {
-          console.log("location posted");
-      }).catch(function (error) {
-          console.log(error);
-      });
+        "id": auth.currentUser.uid,
+        "name": auth.currentUser.name,
+        "lat": lat,
+        "lng": lng,
+        "time": tms
+    }).then(function (response) {
+        console.log("location posted");
+    }).catch(function (error) {
+        console.log(error);
+    });
     } catch (e) {
       console.log("user not logged in");
     }
@@ -166,9 +165,9 @@ export default function App() {
 
   TaskManager.defineTask(BACKGROUND_FETCH_NOTIFICATION_MATCH, async () => {
     //needs to be user's actual id
-    console.log(user);
+
     try {
-      let resp = await axios.get('http://10.0.2.2:8080/api/getExposureSitesByUserID/' + user.uid);
+      let resp = await axios.get('http://10.0.2.2:8080/api/getExposureSitesByUserID/' + auth.currentUser.uid);
       console.log(resp.data);
       if (resp.data) {
         for (let site of resp.data) {
@@ -274,9 +273,16 @@ export default function App() {
     });
   }
 
-useEffect( () => {
-  triggerNotification();
-}, [notifications]);
+  const initialRender = useRef(true);
+
+  useEffect(() => {
+    if (initialRender.current) {
+      initialRender.current = false;
+    }
+    else {
+      triggerNotification();
+    }
+  }, [notifications]);
   
    
 
@@ -338,7 +344,7 @@ useEffect( () => {
 
   return (
     <NavigationContainer>
-       {user ? (
+       {auth.currentUser ? (
         <userExistsNavigator.Navigator headerMode="none">
           <userExistsNavigator.Screen name='Mainpages' component={BottomTabScreens}/>
           <userExistsNavigator.Screen name='LogIn' component={SignInScreen}/>
