@@ -27,24 +27,7 @@ const NotificationScreen = ({notifs}) => {
       longitudeDelta: 0.0421
     });
 
-    const triggerNotification = () => {
-        Notifications.scheduleNotificationAsync({
-          content: {
-            title: "New Notification",
-            body: "Tap for more details"
-          },
-          trigger: {
-            seconds: 1
-          }
-        });
-      }
-
-    useEffect( () => {
-      setNotifications(notifs);
-      if (notifs.length > notifications.length) {
-        triggerNotification();
-      }
-    }, [notifs]);
+    
 
     return(
         <View style={{flex: 1, flexDirection: 'column' }}>

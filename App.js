@@ -65,6 +65,8 @@ const BACKGROUND_FETCH_NOTIFICATION_MATCH = 'background-fetch-notification-match
 const BACKGROUND_FETCH_SITES = 'background-fetch-sites';
 const LOCATION_TASK_NAME = 'background-location-task';
 
+const user = auth.currentUser; 
+
 TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
   if (error) {
     console.log(error.message);
@@ -78,18 +80,23 @@ TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
 
     console.log('Received new locations', tms);
     console.log("Longitude, latitude = " + lat + ", " + lng);
+    console.log(user);
 
-    let resp = axios.post('http://10.0.2.2:8080/api/users', {
-        "id": user.uid,
-        "name": "amy",
-        "lat": lat,
-        "lng": lng,
-        "time": tms
-    }).then(function (response) {
-        console.log("location posted");
-    }).catch(function (error) {
-        console.log(error);
-    });
+    try {
+      let resp = axios.post('http://10.0.2.2:8080/api/users', {
+          "id": user.uid,
+          "name": "amy",
+          "lat": lat,
+          "lng": lng,
+          "time": tms
+      }).then(function (response) {
+          console.log("location posted");
+      }).catch(function (error) {
+          console.log(error);
+      });
+    } catch (e) {
+      console.log("user not logged in");
+    }
 
   }
 });
@@ -97,7 +104,7 @@ TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
 async function registerBackgroundFetchAsyncNotificationsNearby() {
   return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_NOTIFICATION_NEARBY, {
     minimumInterval: 1, // 15 minutes
-    stopOnTerminate: false, // android only,
+    stopOnTerminate: true, // android only,
     startOnBoot: true, // android only
   });
 }
@@ -105,7 +112,7 @@ async function registerBackgroundFetchAsyncNotificationsNearby() {
 async function registerBackgroundFetchAsyncNotificationsMatch() {
   return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_NOTIFICATION_MATCH, {
     minimumInterval: 1, // 15 minutes
-    stopOnTerminate: false, // android only,
+    stopOnTerminate: true, // android only,
     startOnBoot: true, // android only
   });
 }
@@ -113,7 +120,7 @@ async function registerBackgroundFetchAsyncNotificationsMatch() {
 async function registerBackgroundFetchAsyncSites() {
   return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_SITES, {
     minimumInterval: 1, // 15 minutes
-    stopOnTerminate: false, // android only,
+    stopOnTerminate: true, // android only,
     startOnBoot: true, // android only
   });
 }
@@ -136,6 +143,7 @@ export default function App() {
   const [sites, setSites] = useState(newSites);
 
   TaskManager.defineTask(BACKGROUND_FETCH_NOTIFICATION_NEARBY, async () => {
+    console.log("nearby fetch started");
     let location = await Location.getCurrentPositionAsync({});
     let resp = await axios.post('http://10.0.2.2:8080/api/getCloseSites', {
       latitude: location.coords.latitude, 
@@ -158,17 +166,23 @@ export default function App() {
 
   TaskManager.defineTask(BACKGROUND_FETCH_NOTIFICATION_MATCH, async () => {
     //needs to be user's actual id
-    let resp = await axios.get('http://10.0.2.2:8080/api/getExposureSitesByUserID/' + user.uid);
-    console.log(resp.data);
-    if (resp.data) {
-      for (let site of resp.data) {
-        if (!notifications.some(notif => notif._id === site._id && notif.type === 'Match')){
-          site.type = 'Match';
-          setNotifications(notifications => [...notifications, site]);
+    console.log(user);
+    try {
+      let resp = await axios.get('http://10.0.2.2:8080/api/getExposureSitesByUserID/' + user.uid);
+      console.log(resp.data);
+      if (resp.data) {
+        for (let site of resp.data) {
+          if (!notifications.some(notif => notif._id === site._id && notif.type === 'Match')){
+            site.type = 'Match';
+            setNotifications(notifications => [...notifications, site]);
+          }
         }
       }
+      console.log('match notifications updated');
+
+    } catch (e) {
+      console.log("user not logged in");
     }
-    console.log('match notifications updated');
     // Be sure to return the successful result type!
     return BackgroundFetch.Result.NewData;
   });
@@ -185,6 +199,7 @@ export default function App() {
 
   useEffect(() => {
     (async () => {
+      await Location.requestForegroundPermissionsAsync();
       let { status } = await Location.requestBackgroundPermissionsAsync();
       if (status !== 'granted') {
         console.log('Permission denied');
@@ -194,7 +209,7 @@ export default function App() {
       if (!await Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME)) {
         await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
           accuracy: Location.Accuracy.High,
-          timeInterval: 1000*60*5, // Every 5 minutes
+          timeInterval: 1000*60, // Every minute
           distanceInterval: 100,
       });
       }
@@ -235,13 +250,35 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    registerBackgroundFetchAsyncNotificationsNearby();
-    registerBackgroundFetchAsyncNotificationsMatch();
-    registerBackgroundFetchAsyncSites();
-    console.log('tasks registered');
+    (async () => {
+      await registerBackgroundFetchAsyncNotificationsNearby();
+      await registerBackgroundFetchAsyncNotificationsMatch();
+      await registerBackgroundFetchAsyncSites();
+      console.log('tasks registered');
+      let status = await TaskManager.isTaskRegisteredAsync(BACKGROUND_FETCH_NOTIFICATION_NEARBY);
+      console.log(status);
+
+    })();
+    
   }, [])
+
+  const triggerNotification = () => {
+    Notifications.scheduleNotificationAsync({
+      content: {
+        title: "New Notification",
+        body: "Tap for more details"
+      },
+      trigger: {
+        seconds: 1
+      }
+    });
+  }
+
+useEffect( () => {
+  triggerNotification();
+}, [notifications]);
   
-  const user = auth.currentUser;  
+   
 
   /***************************************** NAVIGATIONS ********************************************************/
 
