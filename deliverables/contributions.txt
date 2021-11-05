@@ -7,12 +7,14 @@ Benjamin Yi 1152795:
  - Implemented shake to refresh data
  
 Conor Rogers 1054182:
- - Added the markers to the map
+ - Added the pin markers to the map
  - Added the list of sites/notifications as a table to each page
  - Added the tab navigation (to go between map, notification and settings)
  - Added the phone notifications that trigger with a message and sound when a new notification comes in
- - Added code to have site data and notification data make API calls to update when the app is in the backgroun
- - Added code to handle responses from API for notification and site update
+ - Added the code to have site data update in the background every 5 minutes, using API calls.
+ - Added the code to have match notification data update in the background every minute, using API calls.
+ - Added the code to have nearby notification data update in the background every minute, using API calls. 
+ - Several bug fixes related to performance.
  
 Kheng Yu Yeoh 516454:
  - Set up backend data structure and class diagram.
