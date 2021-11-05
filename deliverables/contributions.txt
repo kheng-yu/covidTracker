@@ -34,3 +34,10 @@ Jiayi Li 1097419:
  - Connected Camera sensor on the phone to get user profile picture and store it into firebase
  - Made user profile editing work to update user information and store it into firebase
  - Final integration of all front-end screens
+
+Adam Patterson 914400:
+ - Setup and managed firebase backend
+ - Managed storing data in firestore for use in app
+ - Developed backend webscraper for gathering data and storing in firebase
+ - Developed front-end UI design
+ - Adjusted front-end UI to conform to Android UI guidelines

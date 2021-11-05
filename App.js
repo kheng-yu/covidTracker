@@ -30,7 +30,7 @@ import CameraScreen from './screens/camera';
 
 /***************************************** FUNCTIONS ********************************************************/
 
-//Need to rewrite notifications JSX to handle when initial notifications are blank
+//Initial default notification and site.
 var newNotifications = [
   {
       _id: 1,
@@ -81,6 +81,8 @@ TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
     console.log('Received new locations', tms);
     console.log("Longitude, latitude = " + lat + ", " + lng);
 
+    console.log(user);
+    //Sen location to API
     try {
       let resp = axios.post('http://10.0.2.2:8080/api/users', {
         "id": auth.currentUser.uid,
@@ -100,6 +102,7 @@ TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
   }
 });
 
+//The following three functions register the background fetches for 1 minute intervals
 async function registerBackgroundFetchAsyncNotificationsNearby() {
   return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_NOTIFICATION_NEARBY, {
     minimumInterval: 1, // 15 minutes
@@ -118,6 +121,7 @@ async function registerBackgroundFetchAsyncNotificationsMatch() {
 
 async function registerBackgroundFetchAsyncSites() {
   return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_SITES, {
+
     minimumInterval: 1, // 15 minutes
     stopOnTerminate: true, // android only,
     startOnBoot: true, // android only
@@ -141,6 +145,7 @@ export default function App() {
   const [notifications, setNotifications] = useState(newNotifications);
   const [sites, setSites] = useState(newSites);
 
+  //Every minute, this function is called, asking the API if any exposure sites are nearby to current GPS location
   TaskManager.defineTask(BACKGROUND_FETCH_NOTIFICATION_NEARBY, async () => {
     console.log("nearby fetch started");
     let location = await Location.getCurrentPositionAsync({});
@@ -163,6 +168,7 @@ export default function App() {
     return BackgroundFetch.Result.NewData;
   });
 
+  //Every minute this function is called, checking if any exposure sites overlap with the user's location history
   TaskManager.defineTask(BACKGROUND_FETCH_NOTIFICATION_MATCH, async () => {
     //needs to be user's actual id
 
@@ -178,7 +184,6 @@ export default function App() {
         }
       }
       console.log('match notifications updated');
-
     } catch (e) {
       console.log("user not logged in");
     }
@@ -186,6 +191,7 @@ export default function App() {
     return BackgroundFetch.Result.NewData;
   });
 
+  //Every minute, we ask the API for the latest version of exposure sites
   TaskManager.defineTask(BACKGROUND_FETCH_SITES, async () => {
     let resp = await axios.get('http://10.0.2.2:8080/api/sites');
     
@@ -196,6 +202,7 @@ export default function App() {
     return BackgroundFetch.Result.NewData;
   });
 
+  //On startup, begin sensing phone's GPS location every 5 minutes
   useEffect(() => {
     (async () => {
       await Location.requestForegroundPermissionsAsync();
@@ -216,7 +223,7 @@ export default function App() {
   }, []);
 
 
-  //Shake to refresh
+  //Shake to refresh exposure site list
   DeviceMotion.setUpdateInterval(1000);
     DeviceMotion.addListener(async (deviceMotionData) => {
         if (deviceMotionData.rotationRate.alpha +
@@ -232,6 +239,7 @@ export default function App() {
             }
     });
 
+  //Set up for phone's notifications
   useEffect(() => {
     //When app is closed
     const backgroundSubscription = Notifications.addNotificationResponseReceivedListener(response => {
@@ -248,6 +256,7 @@ export default function App() {
     }
   }, []);
 
+  //Register all the background tasks
   useEffect(() => {
     (async () => {
       await registerBackgroundFetchAsyncNotificationsNearby();
@@ -318,7 +327,7 @@ export default function App() {
         tabBarIcon: ({ color, size }) => (
           <MaterialCommunityIcons name="bell" color='#094183' size={size} />
         ),}} />
-        <Tab.Screen name='Map' children={() => <MapScreen sites={sites}/>}
+        <Tab.Screen name='Map' children={() => <MapScreen newSites={sites}/>}
         options={{
         headerStyle: { 
           backgroundColor: "#094183",
