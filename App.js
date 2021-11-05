@@ -30,7 +30,7 @@ import CameraScreen from './screens/camera';
 
 /***************************************** FUNCTIONS ********************************************************/
 
-//Need to rewrite notifications JSX to handle when initial notifications are blank
+//Initial default notification and site.
 var newNotifications = [
   {
       _id: 1,
@@ -65,6 +65,9 @@ const BACKGROUND_FETCH_NOTIFICATION_MATCH = 'background-fetch-notification-match
 const BACKGROUND_FETCH_SITES = 'background-fetch-sites';
 const LOCATION_TASK_NAME = 'background-location-task';
 
+const user = auth.currentUser;
+
+//Define what happens when the phone's gps location is sensed
 TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
   if (error) {
     console.log(error.message);
@@ -79,7 +82,9 @@ TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
     console.log('Received new locations', tms);
     console.log("Longitude, latitude = " + lat + ", " + lng);
 
-    let resp = axios.post('http://10.0.2.2:8080/api/users', {
+    //Send location to API
+    try {
+      let resp = axios.post('http://10.0.2.2:8080/api/users', {
         "id": user.uid,
         "name": "amy",
         "lat": lat,
@@ -90,13 +95,18 @@ TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
     }).catch(function (error) {
         console.log(error);
     });
+    } catch (e) {
+      console.log("Location not posted, user may not be logged in");
+    }
+    
 
   }
 });
 
+//The following three functions register the background fetches for 1 minute intervals
 async function registerBackgroundFetchAsyncNotificationsNearby() {
   return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_NOTIFICATION_NEARBY, {
-    minimumInterval: 1, // 15 minutes
+    minimumInterval: 1, // 1 minutes
     stopOnTerminate: false, // android only,
     startOnBoot: true, // android only
   });
@@ -104,7 +114,7 @@ async function registerBackgroundFetchAsyncNotificationsNearby() {
 
 async function registerBackgroundFetchAsyncNotificationsMatch() {
   return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_NOTIFICATION_MATCH, {
-    minimumInterval: 1, // 15 minutes
+    minimumInterval: 1, // 1 minutes
     stopOnTerminate: false, // android only,
     startOnBoot: true, // android only
   });
@@ -112,7 +122,7 @@ async function registerBackgroundFetchAsyncNotificationsMatch() {
 
 async function registerBackgroundFetchAsyncSites() {
   return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_SITES, {
-    minimumInterval: 1, // 15 minutes
+    minimumInterval: 5, // 5 minutes
     stopOnTerminate: false, // android only,
     startOnBoot: true, // android only
   });
@@ -135,6 +145,7 @@ export default function App() {
   const [notifications, setNotifications] = useState(newNotifications);
   const [sites, setSites] = useState(newSites);
 
+  //Every minute, this function is called, asking the API if any exposure sites are nearby to current GPS location
   TaskManager.defineTask(BACKGROUND_FETCH_NOTIFICATION_NEARBY, async () => {
     let location = await Location.getCurrentPositionAsync({});
     let resp = await axios.post('http://10.0.2.2:8080/api/getCloseSites', {
@@ -156,23 +167,29 @@ export default function App() {
     return BackgroundFetch.Result.NewData;
   });
 
+  //Every minute this function is called, checking if any exposure sites overlap with the user's location history
   TaskManager.defineTask(BACKGROUND_FETCH_NOTIFICATION_MATCH, async () => {
-    //needs to be user's actual id
-    let resp = await axios.get('http://10.0.2.2:8080/api/getExposureSitesByUserID/' + user.uid);
-    console.log(resp.data);
-    if (resp.data) {
-      for (let site of resp.data) {
-        if (!notifications.some(notif => notif._id === site._id && notif.type === 'Match')){
-          site.type = 'Match';
-          setNotifications(notifications => [...notifications, site]);
+    try {
+      let resp = await axios.get('http://10.0.2.2:8080/api/getExposureSitesByUserID/' + user.uid);
+      console.log(resp.data);
+      if (resp.data) {
+        for (let site of resp.data) {
+          if (!notifications.some(notif => notif._id === site._id && notif.type === 'Match')){
+            site.type = 'Match';
+            setNotifications(notifications => [...notifications, site]);
+          }
         }
       }
+    } catch (e) {
+      console.log("Match notification unsuccessful, user may not be logged in");
     }
+    
     console.log('match notifications updated');
     // Be sure to return the successful result type!
     return BackgroundFetch.Result.NewData;
   });
 
+  //Every minute, we ask the API for the latest version of exposure sites
   TaskManager.defineTask(BACKGROUND_FETCH_SITES, async () => {
     let resp = await axios.get('http://10.0.2.2:8080/api/sites');
     
@@ -183,6 +200,7 @@ export default function App() {
     return BackgroundFetch.Result.NewData;
   });
 
+  //On startup, begin sensing phone's GPS location every 5 minutes
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestBackgroundPermissionsAsync();
@@ -202,7 +220,7 @@ export default function App() {
   }, []);
 
 
-  //Shake to refresh
+  //Shake to refresh exposure site list
   DeviceMotion.setUpdateInterval(1000);
     DeviceMotion.addListener(async (deviceMotionData) => {
         if (deviceMotionData.rotationRate.alpha +
@@ -218,6 +236,7 @@ export default function App() {
             }
     });
 
+  //Set up for phone's notifications
   useEffect(() => {
     //When app is closed
     const backgroundSubscription = Notifications.addNotificationResponseReceivedListener(response => {
@@ -234,6 +253,7 @@ export default function App() {
     }
   }, []);
 
+  //Register all the background tasks
   useEffect(() => {
     registerBackgroundFetchAsyncNotificationsNearby();
     registerBackgroundFetchAsyncNotificationsMatch();
@@ -241,7 +261,7 @@ export default function App() {
     console.log('tasks registered');
   }, [])
   
-  const user = auth.currentUser;  
+    
 
   /***************************************** NAVIGATIONS ********************************************************/
 
@@ -275,7 +295,7 @@ export default function App() {
         tabBarIcon: ({ color, size }) => (
           <MaterialCommunityIcons name="bell" color='#094183' size={size} />
         ),}} />
-        <Tab.Screen name='Map' children={() => <MapScreen sites={sites}/>}
+        <Tab.Screen name='Map' children={() => <MapScreen newSites={sites}/>}
         options={{
         headerStyle: { 
           backgroundColor: "#094183",

@@ -6,7 +6,7 @@ import * as Notifications from 'expo-notifications';
 import * as TaskManager from 'expo-task-manager';
 import axios from 'axios';
 
-const MapScreen = ({ sites }) => {
+const MapScreen = ({ newSites }) => {
 
     const [mapRegion, setMapRegion] = useState({
            latitude: -37.8136,
@@ -15,7 +15,8 @@ const MapScreen = ({ sites }) => {
            longitudeDelta: 0.0421
        });
 
-    const [currentMarker, setCurrentMarker] = useState(sites[0]);
+    const [sites, setSites] = useState(newSites);
+    const [currentMarker, setCurrentMarker] = useState(newSites[0]);
     
     const handlePress = (site) => {
         setCurrentMarker(site);
@@ -26,6 +27,19 @@ const MapScreen = ({ sites }) => {
             longitudeDelta: 0.0421
         })
     }
+
+    useEffect(() => {
+        (async () => {
+            let resp = await axios.get('http://10.0.2.2:8080/api/sites');
+            setSites(resp.data);
+        })();
+    
+    console.log('sites updated');
+    }, [])
+
+    useEffect(() => {
+        setSites(newSites);
+    }, [newSites])
 
     return (
         <View style={{flex: 1, flexDirection: 'column' }}>
