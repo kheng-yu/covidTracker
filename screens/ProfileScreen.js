@@ -148,7 +148,7 @@ const ProfileScreen = props => {
         <FlatList 
           showsVerticalScrollIndicator={false}
           data={displayCurrentAddress}
-          keyExtractor={(item) => displayCurrentAddress.indexOf(item)}
+          keyExtractor={(item) => displayCurrentAddress.indexOf(item).toString()}
           renderItem = {({item}) => (
             <View style={styles.item}> 
               <Text style={styles.itemText}>{item.address}</Text>
