@@ -65,6 +65,7 @@ const BACKGROUND_FETCH_NOTIFICATION_MATCH = 'background-fetch-notification-match
 const BACKGROUND_FETCH_SITES = 'background-fetch-sites';
 const LOCATION_TASK_NAME = 'background-location-task';
 
+
 const user = auth.currentUser;
 
 //Define what happens when the phone's gps location is sensed
@@ -82,23 +83,23 @@ TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
     console.log('Received new locations', tms);
     console.log("Longitude, latitude = " + lat + ", " + lng);
 
-    //Send location to API
+    console.log(user);
+    //Sen location to API
     try {
       let resp = axios.post('http://10.0.2.2:8080/api/users', {
-        "id": user.uid,
-        "name": "amy",
-        "lat": lat,
-        "lng": lng,
-        "time": tms
-    }).then(function (response) {
-        console.log("location posted");
-    }).catch(function (error) {
-        console.log(error);
-    });
+          "id": user.uid,
+          "name": "amy",
+          "lat": lat,
+          "lng": lng,
+          "time": tms
+      }).then(function (response) {
+          console.log("location posted");
+      }).catch(function (error) {
+          console.log(error);
+      });
     } catch (e) {
-      console.log("Location not posted, user may not be logged in");
+      console.log("user not logged in");
     }
-    
 
   }
 });
@@ -106,24 +107,25 @@ TaskManager.defineTask(LOCATION_TASK_NAME, ({ data, error }) => {
 //The following three functions register the background fetches for 1 minute intervals
 async function registerBackgroundFetchAsyncNotificationsNearby() {
   return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_NOTIFICATION_NEARBY, {
-    minimumInterval: 1, // 1 minutes
-    stopOnTerminate: false, // android only,
+    minimumInterval: 1, // 15 minutes
+    stopOnTerminate: true, // android only,
     startOnBoot: true, // android only
   });
 }
 
 async function registerBackgroundFetchAsyncNotificationsMatch() {
   return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_NOTIFICATION_MATCH, {
-    minimumInterval: 1, // 1 minutes
-    stopOnTerminate: false, // android only,
+    minimumInterval: 1, // 15 minutes
+    stopOnTerminate: true, // android only,
     startOnBoot: true, // android only
   });
 }
 
 async function registerBackgroundFetchAsyncSites() {
   return BackgroundFetch.registerTaskAsync(BACKGROUND_FETCH_SITES, {
-    minimumInterval: 5, // 5 minutes
-    stopOnTerminate: false, // android only,
+
+    minimumInterval: 1, // 15 minutes
+    stopOnTerminate: true, // android only,
     startOnBoot: true, // android only
   });
 }
@@ -147,6 +149,7 @@ export default function App() {
 
   //Every minute, this function is called, asking the API if any exposure sites are nearby to current GPS location
   TaskManager.defineTask(BACKGROUND_FETCH_NOTIFICATION_NEARBY, async () => {
+    console.log("nearby fetch started");
     let location = await Location.getCurrentPositionAsync({});
     let resp = await axios.post('http://10.0.2.2:8080/api/getCloseSites', {
       latitude: location.coords.latitude, 
@@ -169,6 +172,7 @@ export default function App() {
 
   //Every minute this function is called, checking if any exposure sites overlap with the user's location history
   TaskManager.defineTask(BACKGROUND_FETCH_NOTIFICATION_MATCH, async () => {
+    console.log(user);
     try {
       let resp = await axios.get('http://10.0.2.2:8080/api/getExposureSitesByUserID/' + user.uid);
       console.log(resp.data);
@@ -180,11 +184,10 @@ export default function App() {
           }
         }
       }
+      console.log('match notifications updated');
     } catch (e) {
-      console.log("Match notification unsuccessful, user may not be logged in");
+      console.log("user not logged in");
     }
-    
-    console.log('match notifications updated');
     // Be sure to return the successful result type!
     return BackgroundFetch.Result.NewData;
   });
@@ -203,6 +206,7 @@ export default function App() {
   //On startup, begin sensing phone's GPS location every 5 minutes
   useEffect(() => {
     (async () => {
+      await Location.requestForegroundPermissionsAsync();
       let { status } = await Location.requestBackgroundPermissionsAsync();
       if (status !== 'granted') {
         console.log('Permission denied');
@@ -212,7 +216,7 @@ export default function App() {
       if (!await Location.hasStartedLocationUpdatesAsync(LOCATION_TASK_NAME)) {
         await Location.startLocationUpdatesAsync(LOCATION_TASK_NAME, {
           accuracy: Location.Accuracy.High,
-          timeInterval: 1000*60*5, // Every 5 minutes
+          timeInterval: 1000*60, // Every minute
           distanceInterval: 100,
       });
       }
@@ -255,13 +259,33 @@ export default function App() {
 
   //Register all the background tasks
   useEffect(() => {
-    registerBackgroundFetchAsyncNotificationsNearby();
-    registerBackgroundFetchAsyncNotificationsMatch();
-    registerBackgroundFetchAsyncSites();
-    console.log('tasks registered');
-  }, [])
-  
+    (async () => {
+      await registerBackgroundFetchAsyncNotificationsNearby();
+      await registerBackgroundFetchAsyncNotificationsMatch();
+      await registerBackgroundFetchAsyncSites();
+      console.log('tasks registered');
+      let status = await TaskManager.isTaskRegisteredAsync(BACKGROUND_FETCH_NOTIFICATION_NEARBY);
+      console.log(status);
+
+    })();
     
+  }, [])
+
+  const triggerNotification = () => {
+    Notifications.scheduleNotificationAsync({
+      content: {
+        title: "New Notification",
+        body: "Tap for more details"
+      },
+      trigger: {
+        seconds: 1
+      }
+    });
+  }
+
+useEffect( () => {
+  triggerNotification();
+}, [notifications]);
 
   /***************************************** NAVIGATIONS ********************************************************/
 
